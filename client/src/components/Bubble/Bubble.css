@@ -1,0 +1,71 @@
+#bubble {
+    float: left;
+}
+
+#header-logo {
+    margin-bottom: 0px;
+    position: fixed;
+    left: -1px;
+    /* visibility: hidden; */
+}
+
+h1 {
+    font-size: 30px;
+    letter-spacing: .2px;
+}
+
+
+.speech-bubble,
+.speech-bubble-2 {
+    position: relative;
+    background: rgba(189, 189, 189, 0.3);
+    border-radius: .4em;
+    margin-top: 49%;
+    margin-left: 170px;
+    width: 200px;
+    font-family: 'Oswald', sans-serif;
+    /* color:rgba(0, 0, 0); */
+    color: rgb(218, 218, 218);
+    /* -webkit-text-stroke: .01px rgb(218, 255, 232); */
+    /* border: 1px solid rgb(218, 255, 232); */
+    padding: 1px 2px 1px 2px;
+    text-align: center;
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: rgba(189, 189, 189, 0.3);
+    border-bottom: 0;
+    border-left: 0;
+    margin-left: -10px;
+    margin-bottom: -20px;
+}
+
+.speech-bubble-2 {
+    margin-top: 34%;
+    margin-left: 290px;
+    color: rgb(196, 255, 219);
+}
+
+
+
+.speech-bubble-2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 25%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: rgba(189, 189, 189, 0.3);
+    border-bottom: 0;
+    border-right: 0;
+    margin-left: -10px;
+    margin-bottom: -20px;
+}

@@ -1,0 +1,74 @@
+#login-btn,
+#signup-btn {
+  font-size: 20px;
+  border: none;
+  background: none;
+  color: rgba(79, 188, 255, 0.692);
+  position: absolute;
+  right: 0px;
+  bottom: -28px;
+  transition-property: color;
+  transition-duration: .5s;
+}
+
+#login-btn:hover,
+#signup-btn:hover {
+  color: rgb(151, 215, 255);
+}
+
+h4 {
+  margin-left: 5px;
+}
+
+.switch-link {
+  position: absolute;
+  bottom: -25px;
+  left: 5px;
+  font-size: 20px;
+  color: rgba(198, 198, 198, 0.829);
+}
+
+button {
+  text-decoration: none;
+  border:none;
+  background:none;
+  color: rgba(233, 130, 254, 0.692);
+  /* transition-property: color;
+  transition-duration: .1s; */
+}
+
+button:hover {
+  text-decoration: none;
+  color: rgb(244, 190, 255);
+}
+
+label {
+  font-size: 20px;
+  margin: 0px;
+  font-style: italic;
+  color: rgba(184, 204, 255, 0.9);
+}
+
+button {
+  font-family: 'Roboto Condensed', monospace;
+}
+
+form {
+  position: relative;
+}
+
+input {
+  border: none;
+  background: rgb(2, 2, 2, 0.4);
+  border-bottom: lightgray 1px solid;
+  border-radius: 5px;
+  color: white;
+  margin: 5px;
+  font-size: 20px;
+  width: 80%;
+  font-family: 'Roboto Condensed', monospace;
+}
+
+input:focus {
+  outline: none;
+}
