@@ -10,8 +10,15 @@ class App extends React.Component {
 
   state={
     currentUser: "jeff",
-    loggedIn: true
+    loggedIn: true,
+    referal:false
   }
+
+  toggleReferal = () => {
+    let toggle = this.state.referal ? false : true;
+    this.setState({referal: toggle});
+  }
+
 
   render(){
     return (
@@ -26,19 +33,25 @@ class App extends React.Component {
             />
             <Route path="/events" render={()=>{
               return(
-                <Events loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+                <Events 
+                  loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                  toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                />
               )
             }}
             />
             <Route exact path="/events/:id" render={()=>{
               return(
-                <Focus loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+                <Focus />
               )
             }}
             />
             <Route exact path="/create" render={()=>{
               return(
-                <Create loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+                <Create 
+                  loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                  toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                />
               )
             }}
             />

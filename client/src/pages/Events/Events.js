@@ -84,10 +84,12 @@ class Events extends React.Component{
 
 
 
-                <div id="refer-box"></div>
+                <div id="refer-box" onClick={this.props.toggleReferal} style={this.props.referalState ? {"display":"block"} : {"display":"none"} }>
+                    IT WORKED
+                </div>
 
 
-                <Footer loggedIn={this.props.loggedIn} />
+                <Footer loggedIn={this.props.loggedIn} toggleReferal={this.props.toggleReferal}/>
             </>
         )
     }
