@@ -47,7 +47,7 @@ class Create extends React.Component{
                 <div id="refer-box"></div>
 
 
-                <Footer />
+                <Footer loggedIn={this.props.loggedIn} />
             </>
         )
     }

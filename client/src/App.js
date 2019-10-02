@@ -6,19 +6,47 @@ import Focus from "./pages/Focus/Focus"
 import Create from "./pages/Create/Create"
 import './App.css';
 
-function App() {
-  return (
-    <>
-      <Router>
-        <div className="wrapper">
-          <Route exact path="/" component={Home}/>
-          <Route path="/events" component={Events}/>
-          <Route exact path="/events/:id" component={Focus}/>
-          <Route exact path="/create" component={Create}/>
-        </div>
-      </Router>
-    </>
-  );
+class App extends React.Component {
+
+  state={
+    currentUser: "jeff",
+    loggedIn: true
+  }
+
+  render(){
+    return (
+      <>
+        <Router>
+          <div className="wrapper">
+            <Route exact path="/" render={()=>{
+              return(
+                <Home loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+              )
+            }}
+            />
+            <Route path="/events" render={()=>{
+              return(
+                <Events loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+              )
+            }}
+            />
+            <Route exact path="/events/:id" render={()=>{
+              return(
+                <Focus loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+              )
+            }}
+            />
+            <Route exact path="/create" render={()=>{
+              return(
+                <Create loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+              )
+            }}
+            />
+          </div>
+        </Router>
+      </>
+    )
+  }
 }
 
 export default App;

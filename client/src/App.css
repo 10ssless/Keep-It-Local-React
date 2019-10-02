@@ -29,7 +29,7 @@ input:-webkit-autofill:active {
 
 #dark-panel {
   float: right;
-  margin: 20px 40px 30px;
+  margin: 20px 40px 30px 0px;
   height: 94vh;
   width: 45%;
   /* background-color: rgba(28, 23, 74, 0.413); */
@@ -150,20 +150,7 @@ li {
 
 
 
-#home {
-  text-decoration: none;
-  /* color: rgba(233, 130, 254, 0.692); */
-  color: rgb(196, 255, 219, 0.7);
-  transition-property: color;
-  transition-duration: .1s;
-}
 
-#home:hover {
-  text-decoration: none;
-  /* color: rgb(244, 190, 255); */
-  /* color:rgb(177, 255, 207); */
-  color: rgb(255, 140, 152);
-}
 
 
 

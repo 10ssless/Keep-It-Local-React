@@ -84,7 +84,7 @@ class Home extends React.Component{
                 </div>
 
                 {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
-                <Footer/>
+                <Footer loggedIn={this.props.loggedIn} />
 
             </>
         )

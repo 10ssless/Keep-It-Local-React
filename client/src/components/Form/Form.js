@@ -12,9 +12,9 @@ function Form(props){
             <div className={props.title == "login" ? "login" : "signup"}>
                 <form id={props.title == "login" ? "login-form" : "signup-form"}>
                     <label>{props.msg}</label><br/>
-                    <input type="text" name="username" placeholder=" username" onChange={props.handleInputChange} />
-                    <input type="password" name="password" placeholder=" password" onChange={props.handleInputChange} />
-                    {props.title == "sign up" ? <input type="text" name="referral" placeholder="referral code" /> : null}
+                    <input type="text" name="username" placeholder=" username" onChange={props.handleInputChange} required/>
+                    <input type="password" name="password" placeholder=" password" onChange={props.handleInputChange} required/>
+                    {props.title == "sign up" ? <input type="text" name="referral" placeholder="referral code" required/> : null}
                     <button type="submit" id={props.title =="login" ? "login-btn" : "signup-btn"}>{props.title}</button> 
                     <span className="switch-link">{props.switchText} <button type="button" onClick={props.changeFormType}>{props.notTitle}</button></span>
                 </form>

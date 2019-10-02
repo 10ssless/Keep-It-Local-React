@@ -2,6 +2,21 @@
     float: left;
 }
 
+#home {
+    text-decoration: none;
+    /* color: rgba(233, 130, 254, 0.692); */
+    color: rgb(196, 255, 219, 0.7);
+    transition-property: color;
+    transition-duration: .5s;
+}
+
+#home:hover {
+    text-decoration: none;
+    /* color: rgb(244, 190, 255); */
+    /* color:rgb(177, 255, 207); */
+    color: rgb(255, 140, 152);
+}
+
 #header-logo {
     margin-bottom: 0px;
     position: fixed;
