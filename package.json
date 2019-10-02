@@ -1,20 +1,51 @@
 {
-  "name": "Keep-It-Local-React",
+  "name": "Keep-It-Local",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Made with React",
+  "main": "server.js",
+  "requires": true,
+  "dependencies": {
+    "@turf/turf": "^5.1.6",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "geo-distance": "^0.2.0",
+    "geocoder": "^0.2.3",
+    "moment": "^2.24.0",
+    "mysql": "^2.17.1",
+    "mysql2": "^1.6.5",
+    "node-geocoder": "^3.23.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "sequelize": "^5.12.3",
+    "voucher-code-generator": "^1.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.18.7"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:prod": "node server.js",
+    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
+    "client": "cd client && npm run start",
+    "seed": "node scripts/seedDB.js",
+    "install": "cd client && npm install",
+    "build": "cd client && npm run build",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/10ssless/Keep-It-Local-React.git"
+    "url": "git+https://github.com/10ssless/Keep-It-Local.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Zubin Mulji",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/10ssless/Keep-It-Local-React/issues"
+    "url": "https://github.com/10ssless/Keep-It-Local/issues"
   },
-  "homepage": "https://github.com/10ssless/Keep-It-Local-React#readme"
+  "homepage": "https://github.com/10ssless/Keep-It-Local#readme"
 }
