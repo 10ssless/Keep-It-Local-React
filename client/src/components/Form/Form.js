@@ -3,14 +3,15 @@ import { Link } from "react-router-dom";
 import './Form.css';
 
 
-function Form(props){
+export default function Form(props){
 
     return(
         <>
             {/* // // // // // // // // // // // // // // // // //  */}
+            {}
 
             <div className={props.title == "login" ? "login" : "signup"}>
-                <form id={props.title == "login" ? "login-form" : "signup-form"}>
+                <form id={props.title == "login" ? "login-form" : "signup-form"} onSubmit={(event) => props.submitForm(event)}>
                     <label>{props.msg}</label><br/>
                     <input type="text" name="username" placeholder=" username" onChange={props.handleInputChange} required/>
                     <input type="password" name="password" placeholder=" password" onChange={props.handleInputChange} required/>
@@ -61,8 +62,4 @@ function Form(props){
             </div> */}
         </>
     )
-}
-
-
-
-export default Form;
+};

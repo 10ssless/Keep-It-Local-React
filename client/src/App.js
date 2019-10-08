@@ -9,9 +9,9 @@ import './App.css';
 class App extends React.Component {
 
   state={
-    currentUser: "jeff",
-    loggedIn: true,
-    referal:false
+    currentUser: null,
+    loggedIn: false,
+    referal: false
   }
 
   toggleReferal = () => {
@@ -19,6 +19,9 @@ class App extends React.Component {
     this.setState({referal: toggle});
   }
 
+  setUser = (username) => {
+    this.setState({currentUser: username, loggedIn: true});
+  }
 
   render(){
     return (
@@ -27,7 +30,7 @@ class App extends React.Component {
           <div className="wrapper">
             <Route exact path="/" render={()=>{
               return(
-                <Home loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}/>
+                <Home loggedIn={this.state.loggedIn} currentUser={this.state.currentUser} setUser={this.setUser}/>
               )
             }}
             />
