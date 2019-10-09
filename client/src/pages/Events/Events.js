@@ -4,77 +4,166 @@ import Bubble from "./../../components/Bubble/Bubble";
 import Footer from "./../../components/Footer/Footer";
 import './Events.css';
 
-class Events extends React.Component{
+class Events extends React.Component {
 
-    state={}
-    
-    render(){
-        return(
+    state = {
+        data: null,
+        fetching: false
+    }
+
+    getEvents = (cb) => {
+        console.log('getting events');
+        const url = "/api/events";
+        this.setState({ fetching: true }); //can be used to display some loading animation or something because the loading process can take a little while
+        try {
+            console.log("fetching");
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(resp => {
+                    console.log(resp);
+                    if (!resp.ok) {
+                        console.log(`there was an issue logging in `);
+                    }
+                    else {
+                        return resp.json();
+                    }
+                }).then(resp => {
+                    console.log(resp);
+                    cb(resp);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+        catch (error) {
+            console.error('Error:', error);
+            return null;
+        }
+    }
+
+    componentDidMount() {
+        this.getEvents((data) => {
+            console.log(data);
+            if (data) {
+                this.setState({ data: data }, () => {
+                    console.log(this.state.data);
+                })
+            }
+            else {
+                console.log("something went wrong");
+            }
+        });
+    }
+
+    renderUserEvents = () => {
+        console.log('called user render');
+        if (this.state.data) {
+            return this.state.data.user.map(item => {
+                return (
+                    <tr className="listing-row" data-id={item.id}>
+                        <td><span className="listing-item listing-item-name"><a href={`/events/${item.id}}`} className="event-link" data-id={`${item.id}`}>{item.name}</a></span></td>
+                        <td><span className="listing-item listing-item-date">{item.date}</span></td>
+                        <td><span className="listing-item listing-item-cat">{item.category}</span></td>
+                        <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
+                        <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>
+                        <td><span className="listing-item listing-item-id">{item.creatorID}</span></td>
+                    </tr>
+                );
+            });
+        }
+    }
+
+    renderAllEvents = () => {
+        if (this.state.data) {
+            return this.state.data.all.map(item => {
+                return (
+                    <tr className="listing-row" data-id={item.id}>
+                        <td><span className="listing-item listing-item-name"><a href={`/events/${item.id}}`} className="event-link" data-id={`${item.id}`}>{item.name}</a></span></td>
+                        <td><span className="listing-item listing-item-date">{item.date}</span></td>
+                        <td><span className="listing-item listing-item-cat">{item.category}</span></td>
+                        <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
+                        <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>
+                        <td><span className="listing-item listing-item-id">{item.creatorID}</span></td>
+                    </tr>
+                );
+            });
+        }
+    }
+
+
+    render() {
+        return (
             <>
-                <Bubble/>
+                <Bubble />
 
                 <div id="dark-panel">
-                    <div class="listings">
-                        
+                    <div className="listings">
 
-                        <div class="list-group user-listings">
-                            <h3 class="listings-section">
+
+                        <div className="list-group user-listings">
+                            <h3 className="listings-section">
                                 YOUR EVENTS
                             </h3>
                             <div>
                                 <table align="left" id="listings-table">
-                                <tr>
-                                    <th><span class="listing-header">name</span></th> 
-                                    <th><span class="listing-header">date</span></th> 
-                                    <th><span class="listing-header">category</span></th> 
-                                    <th><span class="listing-header">distance</span></th> 
-                                    <th><span class="listing-header">rsvps</span></th> 
-                                    <th><span class="listing-header">delete</span></th>
-                                </tr>
-                                    {/* MAP FROM STATE */}
-                                    {/* <tr class="listing-row" data-id="{{this.id}}">
-                                        <td><span class="listing-item listing-item-name"><a href="/events/{{this.id}}" class="event-link" data-id="{{this.id}}">{{this.name}}</a></span></td>
-                                        <td><span class="listing-item listing-item-date">{{moment this.date "MM/DD/YY"}}</span></td>
-                                        <td><span class="listing-item listing-item-cat">{{this.category}}</span></td>
-                                        <td><span class="listing-item listing-item-local">{{this.distance}} mi</span></td>
-                                        <td><span class="listing-item listing-item-votes">{{this.upVotes}}</span></td>
-                                        <td><span class="listing-item listing-item-id">{{this.creatorID}}</span></td>
+                                    <thead>
+                                        <tr>
+                                            <th><span className="listing-header">name</span></th>
+                                            <th><span className="listing-header">date</span></th>
+                                            <th><span className="listing-header">category</span></th>
+                                            <th><span className="listing-header">distance</span></th>
+                                            <th><span className="listing-header">rsvps</span></th>
+                                            <th><span className="listing-header">delete</span></th>
+                                        </tr>
+                                    </thead>
+                                    {this.renderUserEvents()}
+                                    {/* <tr className="listing-row" data-id="{{this.id}}">
+                                        <td><span className="listing-item listing-item-name"><a href="/events/{{this.id}}" className="event-link" data-id="{{this.id}}">{{this.name}}</a></span></td>
+                                        <td><span className="listing-item listing-item-date">{{moment this.date "MM/DD/YY"}}</span></td>
+                                        <td><span className="listing-item listing-item-cat">{{this.category}}</span></td>
+                                        <td><span className="listing-item listing-item-local">{{this.distance}} mi</span></td>
+                                        <td><span className="listing-item listing-item-votes">{{this.upVotes}}</span></td>
+                                        <td><span className="listing-item listing-item-id">{{this.creatorID}}</span></td>
                                     </tr> */}
 
                                 </table>
-                                <Link to="/create" class="new-event-btn">make new event</Link>
-                                <br/><br/><br/><br/>
+                                <Link to="/create" className="new-event-btn">make new event</Link>
+                                <br /><br /><br /><br />
                             </div>
                         </div>
-                        <br/>
-                        <div class="list-group all-listings">
-                            <h3 class="listings-section">
+                        <br />
+                        <div className="list-group all-listings">
+                            <h3 className="listings-section">
                                 ALL EVENTS
                             </h3>
                             <div>
                                 <table align="left" id="listings-table">
-                                <tr>
-                                
-                                    <th><span class="listing-header">name</span></th>
-                                    <th><span class="listing-header">date</span></th>
-                                    <th><span class="listing-header">category</span></th>
-                                    <th><span class="listing-header">distance</span></th>
-                                    <th><span class="listing-header">rsvps</span></th>
-                                    <th><span class="listing-header">creator</span></th>
-                                
-                                </tr>
-                                    {/* MAP FROM STATE */}
-                                    {/* <tr class="listing-row" data-id="{{this.id}}">
-                                        <td><span class="listing-item listing-item-name"><a href="/events/{{this.id}}" class="event-link" data-id="{{this.id}}">{{this.name}}</a></span></td>
-                                        <td><span class="listing-item listing-item-date">{{moment this.date "MM/DD/YY"}}</span></td>
-                                        <td><span class="listing-item listing-item-cat">{{this.category}}</span></td>
-                                        <td><span class="listing-item listing-item-local">{{this.distance}} mi</span></td>
-                                        <td><span class="listing-item listing-item-votes">{{this.upVotes}}</span></td>
-                                        <td><span class="listing-item listing-item-id">{{this.creatorID}}</span></td>
+                                    <thead>
+                                        <tr>
+                                            <th><span className="listing-header">name</span></th>
+                                            <th><span className="listing-header">date</span></th>
+                                            <th><span className="listing-header">category</span></th>
+                                            <th><span className="listing-header">distance</span></th>
+                                            <th><span className="listing-header">rsvps</span></th>
+                                            <th><span className="listing-header">creator</span></th>
+
+                                        </tr>
+                                    </thead>
+                                    {this.renderAllEvents()}
+                                    {/* <tr className="listing-row" data-id="{{this.id}}">
+                                        <td><span className="listing-item listing-item-name"><a href="/events/{{this.id}}" className="event-link" data-id="{{this.id}}">{{this.name}}</a></span></td>
+                                        <td><span className="listing-item listing-item-date">{{moment this.date "MM/DD/YY"}}</span></td>
+                                        <td><span className="listing-item listing-item-cat">{{this.category}}</span></td>
+                                        <td><span className="listing-item listing-item-local">{{this.distance}} mi</span></td>
+                                        <td><span className="listing-item listing-item-votes">{{this.upVotes}}</span></td>
+                                        <td><span className="listing-item listing-item-id">{{this.creatorID}}</span></td>
                                     </tr> */}
 
                                 </table>
-                                <br/><br/><br/><br/>
+                                <br /><br /><br /><br />
                             </div>
                         </div>
                     </div>
@@ -84,12 +173,12 @@ class Events extends React.Component{
 
 
 
-                <div id="refer-box" onClick={this.props.toggleReferal} style={this.props.referalState ? {"display":"block"} : {"display":"none"} }>
+                <div id="refer-box" onClick={this.props.toggleReferal} style={this.props.referalState ? { "display": "block" } : { "display": "none" }}>
                     IT WORKED
                 </div>
 
 
-                <Footer loggedIn={this.props.loggedIn} toggleReferal={this.props.toggleReferal}/>
+                <Footer loggedIn={this.props.loggedIn} toggleReferal={this.props.toggleReferal} />
             </>
         )
     }

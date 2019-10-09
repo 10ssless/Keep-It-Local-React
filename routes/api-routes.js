@@ -33,6 +33,12 @@ router.get("/", notAuthenticated, function (req, res) {
   res.send("login")
 });
 
+//returns user object as JSON object if the user is still logged in/session is still active
+router.get("/currentUser", function(req, res){
+  console.log(`req.user: ${JSON.stringify(req.user)}`);
+  req.user ? res.send(req.user) : res.sendStatus(400);
+});
+
 router.get("/login", notAuthenticated, function (req, res) {
   res.render("login");
 });
@@ -50,12 +56,14 @@ router.get("/create", isAuthenticated, function (req, res) {
   res.render("create");
 });
 
-router.get("/events", isAuthenticated, function (req, res) {
-  console.log(req.user);
+router.get("/api/events", function (req, res) {
+  console.log(`req.user: ${JSON.toString(req.user)}`);
+  console.log(req.user.userName);
   if (req.user) {
-    let all = [];
-    let user = [];
+    let all = []; //stores all events in the area
+    let user = []; //stores all the events the user created
     let currentLoc = formatCoords(req.user.currentLocation);
+    console.log(currentLoc);
     const options = {
       units: 'miles'
     };
@@ -69,7 +77,6 @@ router.get("/events", isAuthenticated, function (req, res) {
         ['date', 'DESC']
       ]
     }).then(function (dbEvents) {
-      console.log(req.user.currentLocation);
       dbEvents.forEach(function (element) {
         console.log('data vals: ');
         console.log(element.dataValues);
@@ -101,22 +108,22 @@ router.get("/events", isAuthenticated, function (req, res) {
         });
         console.log(all)
         console.log(user)
-        res.render('index', {
-          all_events: all,
-          user_events: user
+        res.json({
+          "all": all,
+          "user": user
         });
       });
     });
   } else {
-    res.redirect('/');
+    res.end();
   }
 });
 
 router.get("/events/:id", isAuthenticated, function (req, res) {
   console.log(req.user);
   if (req.user) {
-    let all = [];
-    let user = [];
+    let all = []; // stores all events
+    let user = [];  //stores all the user events
     let msgs = [];
     let focus;
     let currentLoc = req.user.currentLocation;
@@ -449,7 +456,7 @@ router.put("/api/event/:id", function (req, res) {
 });
 
 router.post("/api/event", function (req, res) {
-  //create new event with a name, category, and location passed in
+  //create new event with a name, category, username, and location passed in
   //upVotes is initially 0, and the creatorID is the user's id that is currently logged in.
 
   let description = "";
@@ -502,7 +509,7 @@ router.post("/api/event", function (req, res) {
         // streetAddress: req.body.address,
         location: req.body.location,
         coords: loc,
-        creatorID: req.user.userName,
+        creatorID: req.body.username,
         // startTime: req.body.startTime,
         // endTime: req.body.endTime,
         upVotes: 0

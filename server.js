@@ -33,6 +33,8 @@ app.use(session({
     saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+console.log(__dirname + '/client/public');
+app.use(express.static(__dirname + '/client/public'));
 
 
 // app.engine("handlebars", exphbs({defaultLayout:"main"}));

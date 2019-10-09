@@ -31,36 +31,44 @@ class Home extends React.Component {
 
     oldUser = (event) => {
         event.preventDefault();
-        console.log(event);
-        const url = "/api/login";
-        const data = {
-            "username": this.state.username,
-            "password": this.state.password
-        }
-        try {
-            const response = fetch(url, {
-                method: 'POST', // or 'PUT'
-                body: JSON.stringify(data), // data can be `string` or {object}!
-                headers: {
-                    'Content-Type': 'application/json'
+        this.props.getLocation((loc) => {
+            if (loc) {
+                const url = "/api/login";
+                const data = {
+                    "username": this.state.username,
+                    "password": this.state.password,
+                    "location": `${loc.latitude}, ${loc.longitude}`
                 }
-            })
-                .then(resp => {
-                    console.log(resp);
-                    if (resp.ok) {
-                        this.props.setUser(this.state.username);
-                    }
-                    else {
-                        console.log(`there was an issue logging in `);
-                    }
-                })
-            // .then(json => {
-            //     console.log(json)
-            // });
-        } catch (error) {
-            console.error('Error:', error);
-        }
-        return false;
+                try {
+                    fetch(url, {
+                        method: 'PUT', // or 'PUT'
+                        body: JSON.stringify(data), // data can be `string` or {object}!
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(resp => {
+                            console.log(resp);
+                            if (resp.ok) {
+                                this.props.setUser(this.state.username);
+                            }
+                            else {
+                                console.log(`there was an issue logging in `);
+                            }
+                        })
+                    // .then(json => {
+                    //     console.log(json)
+                    // });
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+                return false;
+            }
+            else {
+                console.log("something went wrong getting location probably");
+                return false;
+            }
+        });
     }
 
     formRender = () => {
@@ -98,7 +106,7 @@ class Home extends React.Component {
             }
         }
         else {
-            return(
+            return (
                 <div>
                     {/* TODO -> Display some meaningful info about the user */}
                     Welcome {this.props.currentUser}
