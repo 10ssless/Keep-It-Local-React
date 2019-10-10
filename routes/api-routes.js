@@ -547,7 +547,7 @@ router.post("/api/message", function (req, res) {
   let event_id = req.body.id;
   //console.log('content: ');
   let content = escapeString(req.body.content);
-  console.log(content);
+  console.log(`INSERT INTO Messages_${event_id}(content, creatorID) VALUES("${content}", "${req.user.userName}");`);
   connection.query(`INSERT INTO Messages_${event_id}(content, creatorID) VALUES("${content}", "${req.user.userName}");`,
     function (err, result) {
       if (err) throw err.stack;

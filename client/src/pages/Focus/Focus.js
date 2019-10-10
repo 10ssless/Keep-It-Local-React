@@ -11,7 +11,8 @@ class Focus extends React.Component {
         location: null,
         date: null,
         creatorID: null,
-
+        newMessage: null,
+        messages: null,
         // when the edit button is clicked the page will respond
         editing: false,
 
@@ -164,7 +165,7 @@ class Focus extends React.Component {
                 const descr = this.state.newDescription;
                 const name = this.state.newName;
                 this.props.updateEvents(() => { // re-fetches the events in the Events component so the name is updated if needed
-                this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null }, ()=>{console.log(this.state)});
+                    this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null }, () => { console.log(this.state) });
                 });
             });
         }
@@ -175,6 +176,28 @@ class Focus extends React.Component {
 
     onTextChange = (event) => {
         this.setState({ [event.target.name]: event.target.value })
+    }
+
+    submitMessage = () => {
+        fetch(`/api/message`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: this.props.eventID,
+                content: this.state.newMessage
+            })
+        }).then(resp => {
+            if (resp.ok) {
+                this.fetchMessages(data => {
+                    this.setState({ messages: data });
+                })
+            }
+            else {
+                console.log(`couldn't submit the message`);
+            }
+        })
     }
 
     render() {
@@ -218,8 +241,8 @@ class Focus extends React.Component {
                             {this.renderMessages()}
                             <br /><br />
                         </ul>
-                        <input type="text" id="new-msg" placeholder="new message" />
-                        <button type="button" class="msg-btn" data-id="{{select_event.data.id}}">post</button>
+                        <input type="text" id="new-msg" placeholder="new message" name="newMessage" onChange={event => this.onTextChange(event)} />
+                        <button type="button" class="msg-btn" onClick={this.submitMessage}>post</button>
                     </div>
                 </div>
             </>
