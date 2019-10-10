@@ -58,7 +58,7 @@ router.get("/create", isAuthenticated, function (req, res) {
 });
 
 router.get("/api/events", function (req, res) {
-  console.log(`req.user: ${JSON.toString(req.user)}`);
+  console.log(`req.user: ${JSON.stringify(req.user)}`);
   console.log(req.user.userName);
   if (req.user) {
     let all = []; //stores all events in the area
@@ -463,7 +463,7 @@ router.put("/api/event/:id", function (req, res) {
 router.post("/api/event", function (req, res) {
   //create new event with a name, category, username, and location passed in
   //upVotes is initially 0, and the creatorID is the user's id that is currently logged in.
-
+  console.log(req.body);
   let description = "";
   if (req.body.description) {
     description = req.body.description
@@ -514,7 +514,7 @@ router.post("/api/event", function (req, res) {
         // streetAddress: req.body.address,
         location: req.body.location,
         coords: loc,
-        creatorID: req.body.username,
+        creatorID: req.user.userName,
         // startTime: req.body.startTime,
         // endTime: req.body.endTime,
         upVotes: 0

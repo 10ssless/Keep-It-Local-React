@@ -1,10 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Router, Route } from "react-router-dom";
 import Home from "./pages/Home/Home"
 import Events from "./pages/Events/Events"
 import Focus from "./pages/Focus/Focus"
 import Create from "./pages/Create/Create"
 import './App.css';
+import history from './history';
 
 class App extends React.Component {
 
@@ -110,7 +111,7 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <Router>
+        <Router history={history}>
           {this.renderRoutes()}
         </Router>
       </>

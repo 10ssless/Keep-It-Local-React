@@ -4,15 +4,17 @@ import './Focus.css';
 class Focus extends React.Component {
 
     state = {
-        //fetched from our API
+        //fetched from our API 
         eventName: null,
         description: null,
         numRSVP: null,
         location: null,
         date: null,
         creatorID: null,
+
         // when the edit button is clicked the page will respond
         editing: false,
+
         //the new text for name and description when the event is being edited
         newName: null,
         newDescription: null
@@ -203,10 +205,10 @@ class Focus extends React.Component {
                             <p class="event"> located at <span class="event-location">{this.state.location}</span></p>
                             <p class="event"> on <span class="event-date">{this.state.date}</span></p>
                             <p class="event">hosted by <span class="event-creator">{this.state.creatorID}</span></p>
+                            {/*this check should be a backend route, but for now keep it as front-end check*/}
                             {this.props.currentUser === this.state.creatorID ? <button type="button" id="side-btn" class="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> : <button type="button" id="side-btn" class="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>}
                         </>
                     }
-                    {/*this check should be a backend route, but for now keep it as front-end check*/}
                     <br /><br />
 
                     <div id="messages">

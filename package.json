@@ -13,6 +13,7 @@
     "express-session": "^1.16.2",
     "geo-distance": "^0.2.0",
     "geocoder": "^0.2.3",
+    "history": "^4.10.1",
     "moment": "^2.24.0",
     "mysql": "^2.17.1",
     "mysql2": "^1.6.5",
