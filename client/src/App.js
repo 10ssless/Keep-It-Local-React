@@ -76,7 +76,7 @@ class App extends React.Component {
           />
           <Route exact path="/events/:id" render={() => {
             return (
-              <Focus />
+              <Focus currentUser={this.state.currentUser}/>
             )
           }}
           />

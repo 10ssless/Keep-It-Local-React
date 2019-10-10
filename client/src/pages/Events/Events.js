@@ -2,13 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Bubble from "./../../components/Bubble/Bubble";
 import Footer from "./../../components/Footer/Footer";
+import Focus from './../Focus/Focus'
 import './Events.css';
 
 class Events extends React.Component {
 
     state = {
         data: null,
-        fetching: false
+        fetching: false,
+        focusing: null
     }
 
     getEvents = (cb) => {
@@ -44,6 +46,12 @@ class Events extends React.Component {
         }
     }
 
+    focusItem = (event) => {
+        event.preventDefault();
+        console.log(event.target.getAttribute('data-id'));
+        this.setState({focusing: event.target.getAttribute('data-id')});
+    }
+
     componentDidMount() {
         this.getEvents((data) => {
             console.log(data);
@@ -63,8 +71,8 @@ class Events extends React.Component {
         if (this.state.data) {
             return this.state.data.user.map(item => {
                 return (
-                    <tr className="listing-row" data-id={item.id}>
-                        <td><span className="listing-item listing-item-name"><a href={`/events/${item.id}}`} className="event-link" data-id={`${item.id}`}>{item.name}</a></span></td>
+                    <tr className="listing-row">
+                        <td><span onClick={(event)=> this.focusItem(event)} data-id={item.id} className="listing-item listing-item-name">{item.name}{/*<a href={`/events/${item.id}}`} className="event-link" data-id={`${item.id}`}>{item.name}</a>*/}</span></td>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -97,8 +105,8 @@ class Events extends React.Component {
     render() {
         return (
             <>
-                <Bubble />
 
+                {!!this.state.focusing ? <Focus eventID={this.state.focusing} /> : <Bubble />}
                 <div id="dark-panel">
                     <div className="listings">
 
@@ -120,15 +128,6 @@ class Events extends React.Component {
                                         </tr>
                                     </thead>
                                     {this.renderUserEvents()}
-                                    {/* <tr className="listing-row" data-id="{{this.id}}">
-                                        <td><span className="listing-item listing-item-name"><a href="/events/{{this.id}}" className="event-link" data-id="{{this.id}}">{{this.name}}</a></span></td>
-                                        <td><span className="listing-item listing-item-date">{{moment this.date "MM/DD/YY"}}</span></td>
-                                        <td><span className="listing-item listing-item-cat">{{this.category}}</span></td>
-                                        <td><span className="listing-item listing-item-local">{{this.distance}} mi</span></td>
-                                        <td><span className="listing-item listing-item-votes">{{this.upVotes}}</span></td>
-                                        <td><span className="listing-item listing-item-id">{{this.creatorID}}</span></td>
-                                    </tr> */}
-
                                 </table>
                                 <Link to="/create" className="new-event-btn">make new event</Link>
                                 <br /><br /><br /><br />
@@ -153,22 +152,11 @@ class Events extends React.Component {
                                         </tr>
                                     </thead>
                                     {this.renderAllEvents()}
-                                    {/* <tr className="listing-row" data-id="{{this.id}}">
-                                        <td><span className="listing-item listing-item-name"><a href="/events/{{this.id}}" className="event-link" data-id="{{this.id}}">{{this.name}}</a></span></td>
-                                        <td><span className="listing-item listing-item-date">{{moment this.date "MM/DD/YY"}}</span></td>
-                                        <td><span className="listing-item listing-item-cat">{{this.category}}</span></td>
-                                        <td><span className="listing-item listing-item-local">{{this.distance}} mi</span></td>
-                                        <td><span className="listing-item listing-item-votes">{{this.upVotes}}</span></td>
-                                        <td><span className="listing-item listing-item-id">{{this.creatorID}}</span></td>
-                                    </tr> */}
-
                                 </table>
                                 <br /><br /><br /><br />
                             </div>
                         </div>
                     </div>
-
-
                 </div>
 
 

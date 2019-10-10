@@ -15,6 +15,7 @@ const options = {
   apiKey: 'vp4Ua1uwTlWCTF3R29jaF0LRR6GZgfuw'
 };
 const geocoder = NodeGeocoder(options);
+const path = require("path");
 
 /*
 geocoder.geocode("300 Atrium Drive, Somerset, NJ", function ( err, data ) {
@@ -210,11 +211,14 @@ router.get("/events/:id", isAuthenticated, function (req, res) {
 });
 
 //====================== api routes ========================================//
+
+//used for logging in after signing up the first time
 router.post("/api/login", passport.authenticate("local"), function (req, res) {
   console.log('tried to login');
   res.end();
 });
 
+//logging in normally and updating location
 router.put("/api/login", passport.authenticate("local"), function (req, res) {
   console.log('tried to login');
   console.log(req.body.location);
@@ -231,6 +235,7 @@ router.put("/api/login", passport.authenticate("local"), function (req, res) {
   });
 });
 
+//create entry in the table for new user
 router.post("/api/signup", function (req, res) {
   console.log('req.body: ');
   console.log(req.body);
@@ -552,7 +557,7 @@ router.post("/api/message", function (req, res) {
     });
 });
 
-router.get("/api/message/:id", function (req, res) {
+router.get("/api/messages/:id", function (req, res) {
   //get all messages from a certain event
   let event_id = req.params.id;
   // ============= mysql method =======================
@@ -566,6 +571,10 @@ router.get("/api/message/:id", function (req, res) {
     res.send(result);
   });
 });
+
+router.get(function(req, res){
+  res.sendFile(path.join(__dirname, "../client/build/index.html")) || res.sendFile(path.join(__dirname, "../client/public/index.html"));
+})
 
 
 //====================== helper functions ========================================//
