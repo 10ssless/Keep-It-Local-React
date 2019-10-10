@@ -60,7 +60,7 @@ class App extends React.Component {
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 toggleReferal={this.toggleReferal} referalState={this.state.referal}
-                getLocation={this.getLocation}
+                getLocation={this.getLocation} currentUser={this.state.currentUser}
               />
             )
           }}

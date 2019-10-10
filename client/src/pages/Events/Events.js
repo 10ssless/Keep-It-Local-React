@@ -100,13 +100,18 @@ class Events extends React.Component {
             });
         }
     }
-
+    
+    updateEvents = (cb) => {
+        this.getEvents(data => {
+            this.setState({data: data}, cb);
+        });
+    }
 
     render() {
         return (
             <>
 
-                {!!this.state.focusing ? <Focus eventID={this.state.focusing} /> : <Bubble />}
+                {!!this.state.focusing ? <Focus updateEvents={this.updateEvents} eventID={this.state.focusing} currentUser={this.props.currentUser}/> : <Bubble />}
                 <div id="dark-panel">
                     <div className="listings">
 
