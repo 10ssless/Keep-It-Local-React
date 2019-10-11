@@ -33,8 +33,6 @@ app.use(session({
     saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-console.log(__dirname + '/client/public');
-app.use(express.static(__dirname + '/client/public'));
 
 
 // app.engine("handlebars", exphbs({defaultLayout:"main"}));
@@ -42,6 +40,10 @@ app.use(express.static(__dirname + '/client/public'));
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
+}
+else{
+  console.log(__dirname + '/client/public');
+  app.use(express.static(__dirname + '/client/public'));
 }
 
 
