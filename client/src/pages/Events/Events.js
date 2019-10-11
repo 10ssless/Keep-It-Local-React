@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Bubble from "./../../components/Bubble/Bubble";
-import Footer from "./../../components/Footer/Footer";
 import Focus from './../Focus/Focus'
 import './Events.css';
 
@@ -169,9 +168,6 @@ class Events extends React.Component {
                 <div id="refer-box" onClick={this.props.toggleReferal} style={this.props.referalState ? { "display": "block" } : { "display": "none" }}>
                     IT WORKED
                 </div>
-
-
-                <Footer loggedIn={this.props.loggedIn} toggleReferal={this.props.toggleReferal} />
             </>
         )
     }

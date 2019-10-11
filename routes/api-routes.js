@@ -50,7 +50,7 @@ router.get("/signup", notAuthenticated, function (req, res) {
 
 router.get("/logout", isAuthenticated, function (req, res) {
   req.logout();
-  res.redirect("/");
+  res.end();
 });
 
 router.get("/create", isAuthenticated, function (req, res) {

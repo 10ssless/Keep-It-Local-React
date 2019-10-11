@@ -7,7 +7,7 @@ function Footer(props){
         <footer className="footer">
             {props.loggedIn ? <button id="refer-link" onClick={props.toggleReferal}>REFER A FRIEND</button> : null}
             KEEP IT LOCAL®
-            {props.loggedIn ? <span id="logout"><a href="/logout" id="logout-link">LOGOUT</a></span> : null}
+            {props.loggedIn ? <span id="logout" onClick={props.logout}>Logout</span> : null}
         </footer>
     )
 }

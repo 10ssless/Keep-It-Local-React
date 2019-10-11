@@ -6,6 +6,7 @@ import Focus from "./pages/Focus/Focus"
 import Create from "./pages/Create/Create"
 import './App.css';
 import history from './history';
+import Footer from './components/Footer/Footer'
 
 class App extends React.Component {
 
@@ -108,12 +109,32 @@ class App extends React.Component {
     }
   }
 
+  logout = () => {
+    console.log(`logging out`);
+    fetch(`/logout`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+    }
+    }).then(resp => {
+      console.log(resp);
+      console.log(`resp.ok === ${resp.ok}`);
+      if(resp.ok){
+        this.setState({currentUser: "", loggedIn: false});
+      }
+      else{
+        console.log('there was an issue logging out');
+      } 
+    })
+  }
+
   render() {
     return (
       <>
         <Router history={history}>
           {this.renderRoutes()}
         </Router>
+        <Footer loggedIn={this.state.loggedIn} toggleReferal={this.toggleReferal} logout={this.logout}/>
       </>
     )
   }
