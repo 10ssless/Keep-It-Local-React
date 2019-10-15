@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Bubble from "./../../components/Bubble/Bubble";
-import Focus from './../Focus/Focus'
 import './Events.css';
 
 class Events extends React.Component {
@@ -13,18 +12,15 @@ class Events extends React.Component {
     }
 
     getEvents = (cb) => {
-        console.log('getting events');
         const url = "/api/events";
         this.setState({ fetching: true }); //can be used to display some loading animation or something because the loading process can take a little while
         try {
-            console.log("fetching");
             fetch(url, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).then(resp => {
-                    console.log(resp);
                     if (!resp.ok) {
                         console.log(`there was an issue logging in `);
                     }
@@ -32,10 +28,10 @@ class Events extends React.Component {
                         return resp.json();
                     }
                 }).then(resp => {
-                    console.log(resp);
                     cb(resp);
                 })
                 .catch(err => {
+                    console.log(`there was an issue logging in `);
                     console.log(err);
                 })
         }
@@ -48,7 +44,6 @@ class Events extends React.Component {
     componentDidMount() {
         const focusing = !!this.props.match.params.id;
         this.getEvents((data) => {
-            console.log(data);
             if (data) {
                 this.setState({ data: data, focusing: focusing });
             }
@@ -84,7 +79,7 @@ class Events extends React.Component {
     render() {
         return (
             <>
-                {!!this.state.focusing ? "" : <Bubble />}
+                {!!this.state.focusing ? null : <Bubble />}
                 <div id="dark-panel">
                     <div className="listings">
 
@@ -112,7 +107,7 @@ class Events extends React.Component {
                                 <Link to="/create" className="new-event-btn">make new event</Link>
                             </div>
                         </div>
-                        <br />
+
                         <div className="list-group all-listings">
                             <h3 className="listings-section">
                                 ALL EVENTS

@@ -27,7 +27,6 @@ class App extends React.Component {
 
   getLocation = (cb) => {
     navigator.geolocation.getCurrentPosition(function (position) {
-      console.log(position.coords);
       cb(position.coords);
     });
   }
@@ -43,7 +42,6 @@ class App extends React.Component {
         return resp.json();
       }
       else {
-        console.log('user not signed in');
         return;
       }
     }).then(data => {
@@ -62,7 +60,7 @@ class App extends React.Component {
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 toggleReferal={this.toggleReferal} referalState={this.state.referal}
-                getLocation={this.getLocation} currentUser={this.state.currentUser}
+                getLocation={this.getLocation}
                 {...props}
               />
             )
@@ -101,15 +99,11 @@ class App extends React.Component {
             )
           }}
           />
-          <Route path="*" >
-            <Redirect to="/" />
-          </Route>
         </div>
       );
     }
     else {
       return (
-        <>
           <Route exact path="/" render={(props) => {
             return (
               <Home
@@ -119,24 +113,17 @@ class App extends React.Component {
             )
           }}
           />
-          <Route path="*" >
-            <Redirect to="/" />
-          </Route>
-        </>
       );
     }
   }
 
   logout = () => {
-    console.log(`logging out`);
     fetch(`/api/logout`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
       }
     }).then(resp => {
-      console.log(resp);
-      console.log(`resp.ok === ${resp.ok}`);
       if (resp.ok) {
         this.setState({ currentUser: "", loggedIn: false });
       }
@@ -151,6 +138,9 @@ class App extends React.Component {
       <>
         <Router history={history}>
           {this.renderRoutes()}
+          <Route path="*" >
+            <Redirect to="/" />
+          </Route>
         </Router>
         <Footer loggedIn={this.state.loggedIn} toggleReferal={this.toggleReferal} logout={this.logout} />
       </>
