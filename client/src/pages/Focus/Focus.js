@@ -23,7 +23,6 @@ class Focus extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         const { id } = this.props.match.params;
-        console.log(prevProps.match.params.id)
         // only fetch data if a new event is selected - rather than fetch data that is already there
         if (id !== prevProps.match.params.id) {
             this.fetchInformation(id, data => {
@@ -38,11 +37,9 @@ class Focus extends React.Component {
 
     componentDidMount() {
         const { id } = this.props.match.params;
-        console.log(id);
         this.fetchInformation(id, (data)=> {
             this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: data.date, creatorID: data.creatorID }, () => {
                 this.fetchMessages(id, (messages) => {
-                    //console.log(messages);
                     this.setState({ messages: messages });
                 })
             });
@@ -50,7 +47,6 @@ class Focus extends React.Component {
     }
 
     fetchInformation = (id, cb) => {
-        console.log(id);
         fetch(`/api/event/${id}`, {
             method: "GET",
             headers: {
@@ -66,7 +62,6 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                console.log(data);
                 cb(data);
             }
         })
@@ -88,7 +83,6 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                //console.log(data);
                 cb(data);
             }
         })
@@ -114,7 +108,6 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                console.log(data);
                 cb(data);
             }
         })
@@ -149,7 +142,6 @@ class Focus extends React.Component {
                 'Content-Type': 'application/json'
             }
         }).then((resp) => {
-            console.log(resp);
             if (resp.ok) {
                 return resp.json();
             }
@@ -171,7 +163,7 @@ class Focus extends React.Component {
                 const descr = this.state.newDescription;
                 const name = this.state.newName;
                 this.props.updateEvents(() => { // re-fetches the events in the Events component so the name is updated if needed
-                    this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null }, () => { console.log(this.state) });
+                    this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null });
                 });
             });
         }

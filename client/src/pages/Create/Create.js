@@ -14,7 +14,6 @@ class Create extends React.Component{
     }
 
     handleChange = (event) => {
-        console.log({[event.target.name]:event.target.value});
         this.setState({[event.target.name]:event.target.value})
     }
 
@@ -34,16 +33,13 @@ class Create extends React.Component{
             })
         }).then(resp => {
             if(resp.ok){
-                //console.log(resp);
                 history.push('/events');
             }
             else{
                 console.log(`could not create event`);
                 //show some pop up saying it failed
             }
-        }).then(data =>{
-            console.log(data);
-        })
+        });
     }
 
     render(){

@@ -7,9 +7,7 @@ import './Bubble.css';
 function Bubble(){
     return(
         <div id="bubble">
-            <Link to="/">
-                <img src="./header2.gif" id="header-logo"/>
-            </Link>
+        <img src="./header2.gif" id="header-logo" alt="header gif"/>
 
             <hgroup className="speech-bubble">
                 <h1>WHAT'S<br/>HAPPENIN' TN?</h1>
