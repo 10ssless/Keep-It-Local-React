@@ -45,22 +45,12 @@ class Events extends React.Component {
         }
     }
 
-    focusItem = (event) => {
-        event.preventDefault();
-        console.log(event.target.getAttribute('data-id'));
-        this.setState({focusing: event.target.getAttribute('data-id')});
-    }
-
     componentDidMount() {
-        console.log(!!this.props.match.params.id);
         const focusing = !!this.props.match.params.id;
-        //const focusing = !!this.props.match.params.id;
         this.getEvents((data) => {
             console.log(data);
             if (data) {
-                this.setState({ data: data, focusing: focusing }, () => {
-                    console.log(this.state.data);
-                })
+                this.setState({ data: data, focusing: focusing });
             }
             else {
                 console.log("something went wrong");
@@ -68,31 +58,12 @@ class Events extends React.Component {
         });
     }
 
-    renderUserEvents = () => {
-        console.log('called user render');
-        if (this.state.data) {
-            return this.state.data.user.map(item => {
-                console.log(item.id);
-                return (
-                    <tr key={item.id} className="listing-row">
-                        <Link to={`/events/${item.id}`} className="listing-item-name"><td><span>{item.name}</span></td></Link>
-                        <td><span className="listing-item listing-item-date">{item.date}</span></td>
-                        <td><span className="listing-item listing-item-cat">{item.category}</span></td>
-                        <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
-                        <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>
-                        <td><span className="listing-item listing-item-id">{item.creatorID}</span></td>
-                    </tr>
-                );
-            });
-        }
-    }
-
-    renderAllEvents = () => {
-        if (this.state.data) {
-            return this.state.data.all.map(item => {
+    renderEvents = (data) => {
+        if (data) {
+            return data.map(item => {
                 return (
                     <tr key={item.id} className="listing-row" data-id={item.id}>
-                        <Link to={`/events/${item.id}`} className="listing-item-name"><td><span>{item.name}</span></td></Link>
+                        <td><Link to={`/events/${item.id}`} className="listing-item-name">{item.name}</Link></td>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -113,7 +84,6 @@ class Events extends React.Component {
     render() {
         return (
             <>
-
                 {!!this.state.focusing ? "" : <Bubble />}
                 <div id="dark-panel">
                     <div className="listings">
@@ -135,10 +105,11 @@ class Events extends React.Component {
                                             <th><span className="listing-header">delete</span></th>
                                         </tr>
                                     </thead>
-                                    {this.renderUserEvents()}
+                                    <tbody>
+                                        {!!this.state.data ? this.renderEvents(this.state.data.user) : null}
+                                    </tbody>
                                 </table>
                                 <Link to="/create" className="new-event-btn">make new event</Link>
-                                <br /><br /><br /><br />
                             </div>
                         </div>
                         <br />
@@ -159,9 +130,10 @@ class Events extends React.Component {
 
                                         </tr>
                                     </thead>
-                                    {this.renderAllEvents()}
+                                    <tbody>
+                                        {!!this.state.data ? this.renderEvents(this.state.data.all) : null}
+                                    </tbody>
                                 </table>
-                                <br /><br /><br /><br />
                             </div>
                         </div>
                     </div>
