@@ -22,11 +22,13 @@ class Focus extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        const { id } = this.props.match.params;
+        console.log(prevProps.match.params.id)
         // only fetch data if a new event is selected - rather than fetch data that is already there
-        if (this.props.eventID !== prevProps.eventID) {
-            this.fetchInformation(data => {
+        if (id !== prevProps.match.params.id) {
+            this.fetchInformation(id, data => {
                 this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: data.date, creatorID: data.creatorID }, () => {
-                    this.fetchMessages(messages => {
+                    this.fetchMessages(id, messages => {
                         this.setState({ messages: messages });
                     })
                 });
@@ -35,9 +37,11 @@ class Focus extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchInformation(data => {
+        const { id } = this.props.match.params;
+        console.log(id);
+        this.fetchInformation(id, (data)=> {
             this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: data.date, creatorID: data.creatorID }, () => {
-                this.fetchMessages(messages => {
+                this.fetchMessages(id, (messages) => {
                     //console.log(messages);
                     this.setState({ messages: messages });
                 })
@@ -45,8 +49,9 @@ class Focus extends React.Component {
         })
     }
 
-    fetchInformation = (cb) => {
-        fetch(`/api/event/${this.props.eventID}`, {
+    fetchInformation = (id, cb) => {
+        console.log(id);
+        fetch(`/api/event/${id}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -61,13 +66,14 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
+                console.log(data);
                 cb(data);
             }
         })
     }
 
-    fetchMessages = (cb) => {
-        fetch(`/api/messages/${this.props.eventID}`, {
+    fetchMessages = (id, cb) => {
+        fetch(`/api/messages/${id}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'

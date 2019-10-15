@@ -2,22 +2,37 @@ import React from "react";
 import { Link } from "react-router-dom";
 import './Form.css';
 
+const config = {
+    login: {
+        title: "Login",
+        notTitle: "sign up",
+        msg: "Welcome Back, ",
+        switchText: "already a member? "
+    },
+    signUp: {
+        title: "Sign Up",
+        notTitle: "login",
+        msg: "Join the club...",
+        switchText: "not a member? "
+    }
+}
 
 export default function Form(props){
-
+    console.log(props.type);
+    const {title, notTitle, msg, switchText} = config[props.type];
     return(
         <>
             {/* // // // // // // // // // // // // // // // // //  */}
             {}
 
-            <div className={props.title == "login" ? "login" : "signup"}>
-                <form id={props.title == "login" ? "login-form" : "signup-form"} onSubmit={(event) => props.submitForm(event)}>
-                    <label>{props.msg}</label><br/>
+            <div>
+                <form id={title} onSubmit={(event) => props.submitForm(event)}>
+                    <label>{msg}</label><br/>
                     <input type="text" name="username" placeholder=" username" onChange={props.handleInputChange} required/>
                     <input type="password" name="password" placeholder=" password" onChange={props.handleInputChange} required/>
-                    {props.title == "sign up" ? <input type="text" name="referral" placeholder="referral code" required/> : null}
-                    <button type="submit" id={props.title =="login" ? "login-btn" : "signup-btn"}>{props.title}</button> 
-                    <span className="switch-link">{props.switchText} <button type="button" onClick={props.changeFormType}>{props.notTitle}</button></span>
+                    {props.type == "signUp" ? <input type="text" name="referral" placeholder="referral code" required/> : null}
+                    <button type="submit" id="btn" />
+                    <span className="switch-link">{switchText} <button type="button" onClick={props.changeFormType}>{notTitle}</button></span>
                 </form>
             </div>
 

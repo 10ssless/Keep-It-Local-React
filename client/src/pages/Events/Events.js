@@ -52,10 +52,13 @@ class Events extends React.Component {
     }
 
     componentDidMount() {
+        console.log(!!this.props.match.params.id);
+        const focusing = !!this.props.match.params.id;
+        //const focusing = !!this.props.match.params.id;
         this.getEvents((data) => {
             console.log(data);
             if (data) {
-                this.setState({ data: data }, () => {
+                this.setState({ data: data, focusing: focusing }, () => {
                     console.log(this.state.data);
                 })
             }
@@ -69,9 +72,10 @@ class Events extends React.Component {
         console.log('called user render');
         if (this.state.data) {
             return this.state.data.user.map(item => {
+                console.log(item.id);
                 return (
                     <tr className="listing-row">
-                        <td><span onClick={(event)=> this.focusItem(event)} data-id={item.id} className="listing-item listing-item-name">{item.name}{/*<a href={`/events/${item.id}}`} className="event-link" data-id={`${item.id}`}>{item.name}</a>*/}</span></td>
+                        <Link to={`/events/${item.id}`}><td><span data-id={item.id} className="listing-item listing-item-name">{item.name}</span></td></Link>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -88,7 +92,7 @@ class Events extends React.Component {
             return this.state.data.all.map(item => {
                 return (
                     <tr className="listing-row" data-id={item.id}>
-                        <td><span className="listing-item listing-item-name"><a href={`/events/${item.id}}`} className="event-link" data-id={`${item.id}`}>{item.name}</a></span></td>
+                        <Link to={`/events/${item.id}`}><td><span className="listing-item listing-item-name">{item.name}</span></td></Link>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -110,7 +114,7 @@ class Events extends React.Component {
         return (
             <>
 
-                {!!this.state.focusing ? <Focus updateEvents={this.updateEvents} eventID={this.state.focusing} currentUser={this.props.currentUser}/> : <Bubble />}
+                {!!this.state.focusing ? "" : <Bubble />}
                 <div id="dark-panel">
                     <div className="listings">
 

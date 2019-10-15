@@ -67,7 +67,7 @@ class App extends React.Component {
             )
           }}
           />
-          <Route path="/events" render={() => {
+          <Route exact path="/events" render={() => {
             return (
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
@@ -76,9 +76,16 @@ class App extends React.Component {
             )
           }}
           />
-          <Route exact path="/events/:id" render={() => {
+          <Route path="/events/:id" render={(props) => {
             return (
-              <Focus currentUser={this.state.currentUser}/>
+              <>
+              <Events
+                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                {...props}
+              />
+              <Focus currentUser={this.state.currentUser} {...props}/>
+              </>
             )
           }}
           />

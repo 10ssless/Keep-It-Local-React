@@ -120,7 +120,7 @@ router.get("/api/events", function (req, res) {
   }
 });
 
-router.get("/events/:id", isAuthenticated, function (req, res) {
+router.get("/event/:id", isAuthenticated, function (req, res) {
   console.log(req.user);
   if (req.user) {
     let all = []; // stores all events
@@ -175,7 +175,7 @@ router.get("/events/:id", isAuthenticated, function (req, res) {
           }
         }).then(function (dbUserEvents) {
           console.log('dbUserEvents');
-          console.log(dbUserEvents[0].dataValues);
+          console.log(dbUserEvents);
           let owner = req.user.userName === dbUserEvents[0].dataValues.creatorID;
           focus = {
             data: dbUserEvents[0].dataValues,
