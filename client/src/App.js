@@ -57,28 +57,37 @@ class App extends React.Component {
     if (this.state.loggedIn) {
       return (
         <div className="wrapper">
-          <Route exact path="/" render={() => {
+          <Route exact path="/" render={(props) => {
             return (
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 toggleReferal={this.toggleReferal} referalState={this.state.referal}
                 getLocation={this.getLocation} currentUser={this.state.currentUser}
+                {...props}
               />
             )
           }}
           />
-          <Route path="/events" render={() => {
+          <Route exact path="/events" render={(props) => {
             return (
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                {...props}
               />
             )
           }}
           />
-          <Route exact path="/events/:id" render={() => {
+          <Route path="/events/:id" render={(props) => {
             return (
-              <Focus currentUser={this.state.currentUser}/>
+              <>
+              <Events
+                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                {...props}
+              />
+              <Focus currentUser={this.state.currentUser} {...props}/>
+              </>
             )
           }}
           />

@@ -1,5 +1,4 @@
-#login-btn,
-#signup-btn {
+#btn{
     font-size: 20px;
     border: none;
     background: none;
@@ -11,8 +10,7 @@
     transition-duration: .5s;
 }
 
-#login-btn:hover,
-#signup-btn:hover {
+#btn:hover {
     color: rgb(151, 215, 255);
 }
 

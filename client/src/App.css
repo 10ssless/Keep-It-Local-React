@@ -112,7 +112,12 @@ li {
 }
 
 .listing-item-name {
+  color: white;
   margin-right: 40px;
+}
+
+.listing-item-name:hover {
+  color: rgb(250, 149, 159);
 }
 
 .listing-item-local {
@@ -135,9 +140,6 @@ li {
   margin-right: 40px;
 }
 
-
-
-
 #listing-row {
   margin-bottom: 50px;
 }
@@ -146,19 +148,11 @@ li {
   margin-bottom: 30px;
 }
 
-
-
-
-
-
-
-
-
 .event-link {
   color: white;
 }
 
-.listing-row:hover {
+.listing-row:hover{
   color: rgb(250, 149, 159);
   cursor: pointer;
 }

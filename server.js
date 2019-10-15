@@ -5,7 +5,7 @@ const routes = require("./routes/api-routes.js");
 const passport = require("./config/passport");
 
 // Setting up port and requiring models for syncing
-const PORT = process.env.PORT || 3360;
+const PORT = process.env.PORT || 9000;
 const db = require("./models");
 
 // Creating express app and configuring middleware needed for authentication
@@ -33,8 +33,6 @@ app.use(session({
     saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-console.log(__dirname + '/client/public');
-app.use(express.static(__dirname + '/client/public'));
 
 
 // app.engine("handlebars", exphbs({defaultLayout:"main"}));
@@ -43,6 +41,9 @@ app.use(express.static(__dirname + '/client/public'));
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
 }
+else{
+  app.use(express.static(__dirname + '/client/public'));
+}
 
 
 // Requiring our routes
@@ -50,8 +51,9 @@ if (process.env.NODE_ENV === "production") {
 app.use(routes);
 
 // Syncing our database and logging a message to the user upon success
-db.sequelize.sync({ force: false }).then(function() {
   app.listen(PORT, function() {
-    console.log("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
+    console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:%s/ in your browser.`);
+    db.sequelize.sync({ force: false }).then(function() {
+      console.log('connected');
   });
 });

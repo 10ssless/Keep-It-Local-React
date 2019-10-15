@@ -1,6 +1,6 @@
 {
   "name": "Keep-It-Local",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Made with React",
   "main": "server.js",
   "requires": true,
@@ -40,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/10ssless/Keep-It-Local.git"
+    "url": "git+https://github.com/10ssless/Keep-It-Local-React.git"
   },
   "keywords": [],
   "author": "Zubin Mulji",
