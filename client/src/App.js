@@ -101,15 +101,11 @@ class App extends React.Component {
             )
           }}
           />
-          <Route path="*" >
-            <Redirect to="/" />
-          </Route>
         </div>
       );
     }
     else {
       return (
-        <>
           <Route exact path="/" render={(props) => {
             return (
               <Home
@@ -119,10 +115,6 @@ class App extends React.Component {
             )
           }}
           />
-          <Route path="*" >
-            <Redirect to="/" />
-          </Route>
-        </>
       );
     }
   }
@@ -151,6 +143,9 @@ class App extends React.Component {
       <>
         <Router history={history}>
           {this.renderRoutes()}
+          <Route path="*" >
+            <Redirect to="/" />
+          </Route>
         </Router>
         <Footer loggedIn={this.state.loggedIn} toggleReferal={this.toggleReferal} logout={this.logout} />
       </>

@@ -213,7 +213,6 @@ class Focus extends React.Component {
                     {this.state.editing ?
                         <>
                             <h1 id="message-header"><input name="newName" className="event-name" type="text" value={this.state.newName} onChange={event => this.onTextChange(event)} /></h1>
-                            <br /><br />
                             <div id="message-description">
                                 <input id="description" className="event" type="text" name="newDescription" value={this.state.newDescription} onChange={event => this.onTextChange(event)} />
                             </div>
@@ -226,7 +225,6 @@ class Focus extends React.Component {
                         :
                         <>
                             <h1 id="message-header"><span className="event-name">{this.state.eventName}</span></h1>
-                            <br /><br />
                             <div id="message-description">
                                 <p id="description" className="event">{this.state.description}</p>
                             </div>
@@ -238,14 +236,11 @@ class Focus extends React.Component {
                             {this.props.currentUser === this.state.creatorID ? <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> : <button type="button" id="side-btn" className="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>}
                         </>
                     }
-                    <br /><br />
 
                     <div id="messages">
-                        <br />
                         <h4>Messages</h4>
                         <ul id="messages-list">
                             {this.renderMessages()}
-                            <br /><br />
                         </ul>
                         <input type="text" id="new-msg" placeholder="new message" name="newMessage" onChange={event => this.onTextChange(event)} />
                         <button type="button" className="msg-btn" onClick={this.submitMessage}>post</button>

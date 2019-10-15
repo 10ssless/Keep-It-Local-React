@@ -84,7 +84,7 @@ class Events extends React.Component {
     render() {
         return (
             <>
-                {!!this.state.focusing ? "" : <Bubble />}
+                {!!this.state.focusing ? null : <Bubble />}
                 <div id="dark-panel">
                     <div className="listings">
 
@@ -112,7 +112,7 @@ class Events extends React.Component {
                                 <Link to="/create" className="new-event-btn">make new event</Link>
                             </div>
                         </div>
-                        <br />
+                        
                         <div className="list-group all-listings">
                             <h3 className="listings-section">
                                 ALL EVENTS

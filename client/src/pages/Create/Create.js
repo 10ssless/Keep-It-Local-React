@@ -52,28 +52,22 @@ class Create extends React.Component{
                 <Bubble/>
 
                 <div id="dark-panel">
-                    
-                    <br/><br/>
-
                     <div id="quote">
                         <h1>create a new event.</h1>
                     </div>
-
-                    <br/><br/>
-
                     <div class="create">
                         <form id="create-form" onSubmit={event => this.createEvent(event)}>
                             <label>name of event</label>
-                            <input type="text" name="name" placeholder="Event Name" onChange={event => this.handleChange(event)} required/><br/>
+                            <input type="text" name="name" placeholder="Event Name" onChange={event => this.handleChange(event)} required/>
 
                             <label>date of event</label>
-                            <input type="date" id="eventDate" name="date" onChange={event => this.handleChange(event)} required/><br/>
+                            <input type="date" id="eventDate" name="date" onChange={event => this.handleChange(event)} required/>
 
                             <label>category</label>
-                            <input type="text" id="category" name="category" placeholder="Comedy, Music, Party, etc." onChange={event => this.handleChange(event)} required/><br/>
+                            <input type="text" id="category" name="category" placeholder="Comedy, Music, Party, etc." onChange={event => this.handleChange(event)} required/>
 
                             <label>location</label>
-                            <input type="text" id="location" name="location" placeholder="### adddress st, city, state" onChange={event => this.handleChange(event)} required/><br/>
+                            <input type="text" id="location" name="location" placeholder="### adddress st, city, state" onChange={event => this.handleChange(event)} required/>
 
                             <label>description</label>
                             <textarea id="details" name="description" placeholder="start time, dress code, byob, etc. " onChange={event => this.handleChange(event)} wrap="hard"></textarea>
