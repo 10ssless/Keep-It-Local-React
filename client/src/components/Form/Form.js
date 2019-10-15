@@ -4,15 +4,15 @@ import './Form.css';
 
 const config = {
     login: {
-        title: "Login",
+        title: "login",
         notTitle: "sign up",
-        msg: "Welcome Back, ",
+        msg: "welcome back, ",
         switchText: "already a member? "
     },
     signUp: {
-        title: "Sign Up",
+        title: "sign up",
         notTitle: "login",
-        msg: "Join the club...",
+        msg: "join the club...",
         switchText: "not a member? "
     }
 }
@@ -31,7 +31,7 @@ export default function Form(props){
                     <input type="text" name="username" placeholder=" username" onChange={props.handleInputChange} required/>
                     <input type="password" name="password" placeholder=" password" onChange={props.handleInputChange} required/>
                     {props.type == "signUp" ? <input type="text" name="referral" placeholder="referral code" required/> : null}
-                    <button type="submit" id="btn" />
+                    <button type="submit" id="login-btn">{title}</button> 
                     <span className="switch-link">{switchText} <button type="button" onClick={props.changeFormType}>{notTitle}</button></span>
                 </form>
             </div>
