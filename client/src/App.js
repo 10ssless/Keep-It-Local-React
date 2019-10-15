@@ -91,11 +91,12 @@ class App extends React.Component {
             )
           }}
           />
-          <Route exact path="/create" render={() => {
+          <Route exact path="/create" render={(props) => {
             return (
               <Create
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                {...props}
               />
             )
           }}
@@ -120,7 +121,7 @@ class App extends React.Component {
 
   logout = () => {
     console.log(`logging out`);
-    fetch(`/logout`, {
+    fetch(`/api/logout`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
