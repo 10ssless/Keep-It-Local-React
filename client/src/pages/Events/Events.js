@@ -74,8 +74,8 @@ class Events extends React.Component {
             return this.state.data.user.map(item => {
                 console.log(item.id);
                 return (
-                    <tr className="listing-row">
-                        <Link to={`/events/${item.id}`}><td><span data-id={item.id} className="listing-item listing-item-name">{item.name}</span></td></Link>
+                    <tr key={item.id} className="listing-row">
+                        <Link to={`/events/${item.id}`} className="listing-item-name"><td><span>{item.name}</span></td></Link>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -91,8 +91,8 @@ class Events extends React.Component {
         if (this.state.data) {
             return this.state.data.all.map(item => {
                 return (
-                    <tr className="listing-row" data-id={item.id}>
-                        <Link to={`/events/${item.id}`}><td><span className="listing-item listing-item-name">{item.name}</span></td></Link>
+                    <tr key={item.id} className="listing-row" data-id={item.id}>
+                        <Link to={`/events/${item.id}`} className="listing-item-name"><td><span>{item.name}</span></td></Link>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>

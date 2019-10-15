@@ -130,9 +130,9 @@ class Focus extends React.Component {
                     const time = dateTime[1];
                     return (
                         <li>
-                            <span class="msg-date">{date}</span>
-                            <span class="msg-time">{time}</span>
-                            <span class="msg-user">{item.creatorID}</span>
+                            <span className="msg-date">{date}</span>
+                            <span className="msg-time">{time}</span>
+                            <span className="msg-user">{item.creatorID}</span>
                             {item.content}
                         </li>
                     );
@@ -212,30 +212,30 @@ class Focus extends React.Component {
                 <div id="event-main">
                     {this.state.editing ?
                         <>
-                            <h1 id="message-header"><input name="newName" class="event-name" type="text" value={this.state.newName} onChange={event => this.onTextChange(event)} /></h1>
+                            <h1 id="message-header"><input name="newName" className="event-name" type="text" value={this.state.newName} onChange={event => this.onTextChange(event)} /></h1>
                             <br /><br />
                             <div id="message-description">
-                                <input id="description" class="event" type="text" name="newDescription" value={this.state.newDescription} onChange={event => this.onTextChange(event)} />
+                                <input id="description" className="event" type="text" name="newDescription" value={this.state.newDescription} onChange={event => this.onTextChange(event)} />
                             </div>
-                            <p class="event"><span id="rsvp-count" class="event-votes">{this.state.numRSVP}</span> rsvps for this event.</p>
-                            <p class="event"> located at <span class="event-location">{this.state.location}</span></p>
-                            <p class="event"> on <span class="event-date">{this.state.date}</span></p>
-                            <p class="event">hosted by <span class="event-creator">{this.state.creatorID}</span></p>
-                            <button type="button" id="side-btn" class="edit-btn" onClick={event => this.editClick(event)}>Complete Edit</button>
+                            <p className="event"><span id="rsvp-count" className="event-votes">{this.state.numRSVP}</span> rsvps for this event.</p>
+                            <p className="event"> located at <span className="event-location">{this.state.location}</span></p>
+                            <p className="event"> on <span className="event-date">{this.state.date}</span></p>
+                            <p className="event">hosted by <span className="event-creator">{this.state.creatorID}</span></p>
+                            <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>Complete Edit</button>
                         </>
                         :
                         <>
-                            <h1 id="message-header"><span class="event-name">{this.state.eventName}</span></h1>
+                            <h1 id="message-header"><span className="event-name">{this.state.eventName}</span></h1>
                             <br /><br />
                             <div id="message-description">
-                                <p id="description" class="event">{this.state.description}</p>
+                                <p id="description" className="event">{this.state.description}</p>
                             </div>
-                            <p class="event"><span id="rsvp-count" class="event-votes">{this.state.numRSVP}</span> rsvps for this event.</p>
-                            <p class="event"> located at <span class="event-location">{this.state.location}</span></p>
-                            <p class="event"> on <span class="event-date">{this.state.date}</span></p>
-                            <p class="event">hosted by <span class="event-creator">{this.state.creatorID}</span></p>
+                            <p className="event"><span id="rsvp-count" className="event-votes">{this.state.numRSVP}</span> rsvps for this event.</p>
+                            <p className="event"> located at <span className="event-location">{this.state.location}</span></p>
+                            <p className="event"> on <span className="event-date">{this.state.date}</span></p>
+                            <p className="event">hosted by <span className="event-creator">{this.state.creatorID}</span></p>
                             {/*this check should be a backend route, but for now keep it as front-end check*/}
-                            {this.props.currentUser === this.state.creatorID ? <button type="button" id="side-btn" class="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> : <button type="button" id="side-btn" class="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>}
+                            {this.props.currentUser === this.state.creatorID ? <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> : <button type="button" id="side-btn" className="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>}
                         </>
                     }
                     <br /><br />
@@ -248,7 +248,7 @@ class Focus extends React.Component {
                             <br /><br />
                         </ul>
                         <input type="text" id="new-msg" placeholder="new message" name="newMessage" onChange={event => this.onTextChange(event)} />
-                        <button type="button" class="msg-btn" onClick={this.submitMessage}>post</button>
+                        <button type="button" className="msg-btn" onClick={this.submitMessage}>post</button>
                     </div>
                 </div>
             </>
