@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route } from "react-router-dom";
+import { Router, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home/Home"
 import Events from "./pages/Events/Events"
 import Focus from "./pages/Focus/Focus"
@@ -39,15 +39,15 @@ class App extends React.Component {
         'Content-Type': 'application/json'
       }
     }).then((resp) => {
-      if(resp.ok) {
+      if (resp.ok) {
         return resp.json();
       }
-      else{
+      else {
         console.log('user not signed in');
         return;
       }
     }).then(data => {
-      if(data){
+      if (data) {
         this.setUser(data.userName);
       }
     })
@@ -81,59 +81,68 @@ class App extends React.Component {
           <Route path="/events/:id" render={(props) => {
             return (
               <>
-              <Events
-                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferal={this.toggleReferal} referalState={this.state.referal}
-                {...props}
-              />
-              <Focus currentUser={this.state.currentUser} {...props}/>
+                <Events
+                  loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                  toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                  {...props}
+                />
+                <Focus currentUser={this.state.currentUser} {...props} />
               </>
             )
           }}
           />
-          <Route exact path="/create" render={() => {
+          <Route exact path="/create" render={(props) => {
             return (
               <Create
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                {...props}
               />
             )
           }}
           />
+          <Route path="*" >
+            <Redirect to="/" />
+          </Route>
         </div>
       );
     }
     else {
       return (
-        <Route exact path="/" render={() => {
-          return (
-            <Home
-              loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-              setUser={this.setUser} getLocation={this.getLocation}
-            />
-          )
-        }}
-        />
+        <>
+          <Route exact path="/" render={(props) => {
+            return (
+              <Home
+                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                setUser={this.setUser} getLocation={this.getLocation} {...props}
+              />
+            )
+          }}
+          />
+          <Route path="*" >
+            <Redirect to="/" />
+          </Route>
+        </>
       );
     }
   }
 
   logout = () => {
     console.log(`logging out`);
-    fetch(`/logout`, {
+    fetch(`/api/logout`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
-    }
+      }
     }).then(resp => {
       console.log(resp);
       console.log(`resp.ok === ${resp.ok}`);
-      if(resp.ok){
-        this.setState({currentUser: "", loggedIn: false});
+      if (resp.ok) {
+        this.setState({ currentUser: "", loggedIn: false });
       }
-      else{
+      else {
         console.log('there was an issue logging out');
-      } 
+      }
     })
   }
 
@@ -143,7 +152,7 @@ class App extends React.Component {
         <Router history={history}>
           {this.renderRoutes()}
         </Router>
-        <Footer loggedIn={this.state.loggedIn} toggleReferal={this.toggleReferal} logout={this.logout}/>
+        <Footer loggedIn={this.state.loggedIn} toggleReferal={this.toggleReferal} logout={this.logout} />
       </>
     )
   }
