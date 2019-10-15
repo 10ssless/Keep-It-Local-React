@@ -4,18 +4,18 @@ import './Bubble.css';
 
 
 
-function Bubble(){
+function Bubble(props){
     return(
         <div id="bubble">
-            <Link to="/">
-                <img src="./header2.gif" id="header-logo"/>
+            <Link to={props.loggedIn ? "/events" : "/"}>
+                <img src="./header2.gif" alt="Keep It Local logo" id="header-logo"/>
             </Link>
 
             <hgroup className="speech-bubble">
                 <h1>WHAT'S<br/>HAPPENIN' TN?</h1>
             </hgroup>
             <hgroup className="speech-bubble-2">
-                <h1><Link to="/events" id="home">#KEEPITLOCAL</Link></h1>
+                <h1><Link to={props.loggedIn ? "/events" : "/"} id="home">#KEEPITLOCAL</Link></h1>
             </hgroup>
             
         </div>

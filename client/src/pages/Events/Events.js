@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Bubble from "./../../components/Bubble/Bubble";
 import Focus from './../Focus/Focus'
 import './Events.css';
+import Moment from "react-moment"
+import 'moment-timezone';
 
 class Events extends React.Component {
 
@@ -76,7 +78,7 @@ class Events extends React.Component {
                 return (
                     <tr key={item.id} className="listing-row">
                         <Link to={`/events/${item.id}`} className="listing-item-name"><td><span>{item.name}</span></td></Link>
-                        <td><span className="listing-item listing-item-date">{item.date}</span></td>
+                        <td><span className="listing-item listing-item-date"><Moment parse="YYYY-MM-DD" format="MM/DD/YY">{item.date}</Moment></span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
                         <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>
@@ -114,7 +116,8 @@ class Events extends React.Component {
         return (
             <>
 
-                {!!this.state.focusing ? "" : <Bubble />}
+                {/* {!!this.state.focusing ? "" : <Bubble />} */}
+                <Bubble loggedIn={this.props.loggedIn}/>
                 <div id="dark-panel">
                     <div className="listings">
 
@@ -169,7 +172,7 @@ class Events extends React.Component {
 
 
 
-                <div id="refer-box" onClick={this.props.toggleReferal} style={this.props.referalState ? { "display": "block" } : { "display": "none" }}>
+                <div id="refer-box" onClick={this.props.toggleReferral} style={this.props.referralState ? { "display": "block" } : { "display": "none" }}>
                     IT WORKED
                 </div>
             </>

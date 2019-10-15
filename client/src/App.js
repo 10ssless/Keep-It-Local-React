@@ -13,12 +13,12 @@ class App extends React.Component {
   state = {
     currentUser: "",
     loggedIn: false,
-    referal: false
+    referral: false
   }
 
-  toggleReferal = () => {
-    let toggle = this.state.referal ? false : true;
-    this.setState({ referal: toggle });
+  toggleReferral = () => {
+    let toggle = this.state.referral ? false : true;
+    this.setState({ referral: toggle });
   }
 
   setUser = (username) => {
@@ -61,7 +61,7 @@ class App extends React.Component {
             return (
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                toggleReferral={this.toggleReferral} referralState={this.state.referral}
                 getLocation={this.getLocation} currentUser={this.state.currentUser}
                 {...props}
               />
@@ -72,7 +72,7 @@ class App extends React.Component {
             return (
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                toggleReferral={this.toggleReferral} referralState={this.state.referral}
                 {...props}
               />
             )
@@ -83,7 +83,7 @@ class App extends React.Component {
               <>
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                toggleReferral={this.toggleReferral} referralState={this.state.referral}
                 {...props}
               />
               <Focus currentUser={this.state.currentUser} {...props}/>
@@ -95,7 +95,7 @@ class App extends React.Component {
             return (
               <Create
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferal={this.toggleReferal} referalState={this.state.referal}
+                toggleReferral={this.toggleReferral} referralState={this.state.referral}
               />
             )
           }}
@@ -143,7 +143,7 @@ class App extends React.Component {
         <Router history={history}>
           {this.renderRoutes()}
         </Router>
-        <Footer loggedIn={this.state.loggedIn} toggleReferal={this.toggleReferal} logout={this.logout}/>
+        <Footer loggedIn={this.state.loggedIn} toggleReferral={this.toggleReferral} logout={this.logout}/>
       </>
     )
   }

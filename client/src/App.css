@@ -118,6 +118,7 @@ li {
 
 .listing-item-name:hover {
   color: rgb(250, 149, 159);
+  text-decoration: none;
 }
 
 .listing-item-local {
@@ -148,26 +149,26 @@ li {
   margin-bottom: 30px;
 }
 
-.event-link {
+/* .event-link {
   color: white;
-}
+} */
 
-.listing-row:hover{
+/* .listing-row:hover{
   color: rgb(250, 149, 159);
   cursor: pointer;
-}
+} */
 
-.event-link:hover {
+/* .event-link:hover {
   color: rgb(250, 149, 159);
-}
+} */
 
-.event-link:hover .listing-row {
+/* .event-link:hover .listing-row {
   color: rgb(250, 149, 159);
 }
 
 .listing-row:hover .event-link {
   color: rgb(250, 149, 159);
-}
+} */
 
 
 .event-votes {

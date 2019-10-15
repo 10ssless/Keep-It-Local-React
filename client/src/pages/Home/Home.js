@@ -118,13 +118,13 @@ class Home extends React.Component {
         console.log(this.state.formType);
         console.log()
          return (
-         <Form
-            type={this.state.formType}
-            switchText={this.switchText}
-            submitForm={this.state.formType === "login" ? this.oldUser : this.newUser}
-            handleInputChange={this.handleInputChange}
-            changeFormType={this.changeFormType}
-        ></Form>
+            <Form
+                type={this.state.formType}
+                switchText={this.switchText}
+                submitForm={this.state.formType === "login" ? this.oldUser : this.newUser}
+                handleInputChange={this.handleInputChange}
+                changeFormType={this.changeFormType}
+            />
          );
 
     }
@@ -149,9 +149,6 @@ class Home extends React.Component {
                     {this.formRender()}
 
                 </div>
-
-                {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
-                <Footer loggedIn={false} />
 
             </>
         )

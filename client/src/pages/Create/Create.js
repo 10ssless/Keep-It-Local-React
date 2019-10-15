@@ -85,12 +85,12 @@ class Create extends React.Component{
 
 
 
-                <div id="refer-box" onClick={this.props.toggleReferal} style={this.props.referalState ? {"display":"block"} : {"display":"none"} }>
+                <div id="refer-box" onClick={this.props.toggleReferral} style={this.props.referralState ? {"display":"block"} : {"display":"none"} }>
                     IT WORKED
                 </div>
 
 
-                <Footer loggedIn={this.props.loggedIn} toggleReferal={this.props.toggleReferal}/>
+                {/* <Footer loggedIn={this.props.loggedIn} toggleReferral={this.props.toggleReferral}/> */}
             </>
         )
     }
