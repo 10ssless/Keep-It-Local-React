@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import './Bubble.css';
 
-
-
 function Bubble(){
     return(
         <div id="bubble">
