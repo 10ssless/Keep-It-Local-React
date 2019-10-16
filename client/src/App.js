@@ -16,22 +16,7 @@ class App extends React.Component {
     referral: false
   }
 
-  toggleReferral = () => {
-    let toggle = this.state.referral ? false : true;
-    this.setState({ referral: toggle });
-  }
-
-  setUser = (username) => {
-    this.setState({ currentUser: username, loggedIn: true });
-  }
-
-  getLocation = (cb) => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      console.log(position.coords);
-      cb(position.coords);
-    });
-  }
-
+  // get active user on initial loading
   componentDidMount() {
     fetch('/currentUser', {
       method: "GET",
@@ -53,6 +38,47 @@ class App extends React.Component {
     })
   }
 
+  // show/hide referral box
+  toggleReferral = () => {
+    let toggle = this.state.referral ? false : true;
+    this.setState({ referral: toggle });
+  }
+
+  // set currentUser and loggedIn state
+  setUser = (username) => {
+    this.setState({ currentUser: username, loggedIn: true });
+  }
+
+  // get user's location and send coordinates as a callback argument
+  getLocation = (cb) => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      console.log(position.coords);
+      cb(position.coords);
+    });
+  }
+
+  // log out active user
+  logout = () => {
+    console.log(`logging out`);
+    fetch(`/logout`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+    }
+    }).then(resp => {
+      console.log(resp);
+      console.log(`resp.ok === ${resp.ok}`);
+      if(resp.ok){
+        this.setState({currentUser: "", loggedIn: false});
+      }
+      else{
+        console.log('there was an issue logging out');
+      } 
+    })
+  }
+
+  // if user is logged in --> render all routes
+  // if user is NOT logged in --> only render Home route
   renderRoutes = () => {
     if (this.state.loggedIn) {
       return (
@@ -105,36 +131,19 @@ class App extends React.Component {
     }
     else {
       return (
-        <Route exact path="/" render={() => {
-          return (
-            <Home
-              loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-              setUser={this.setUser} getLocation={this.getLocation}
-            />
-          )
-        }}
-        />
+        <div className="wrapper">
+          <Route path="/" render={() => {
+            return (
+              <Home
+                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                setUser={this.setUser} getLocation={this.getLocation}
+              />
+            )
+          }}
+          />
+        </div>
       );
     }
-  }
-
-  logout = () => {
-    console.log(`logging out`);
-    fetch(`/logout`, {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json'
-    }
-    }).then(resp => {
-      console.log(resp);
-      console.log(`resp.ok === ${resp.ok}`);
-      if(resp.ok){
-        this.setState({currentUser: "", loggedIn: false});
-      }
-      else{
-        console.log('there was an issue logging out');
-      } 
-    })
   }
 
   render() {

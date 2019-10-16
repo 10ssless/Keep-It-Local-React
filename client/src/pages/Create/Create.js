@@ -49,7 +49,7 @@ class Create extends React.Component{
     render(){
         return(
             <>
-                <Bubble/>
+                <Bubble loggedIn={this.props.loggedIn} focus={null}/>
 
                 <div id="dark-panel">
                     

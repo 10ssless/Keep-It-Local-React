@@ -134,7 +134,7 @@ class Home extends React.Component {
         return (
             <>
                 {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
-                <Bubble />
+                <Bubble loggedIn={this.props.loggedIn} focus={null}/>
 
 
                 {/* MAKE COMPONENT */}

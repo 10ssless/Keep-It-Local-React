@@ -14,6 +14,27 @@ class Events extends React.Component {
         focusing: null
     }
 
+    // on mount, load events into state 
+    componentDidMount() {
+        console.log(!!this.props.match.params.id);
+        const focusing = !!this.props.match.params.id;
+        this.getEvents((data) => {
+            console.log(data);
+            if (data) {
+                this.setState({ 
+                    data: data, 
+                    focusing: focusing 
+                }, () => {
+                    console.log(this.state.data);
+                })
+            }
+            else {
+                console.log("something went wrong");
+            }
+        });
+    }
+
+    // helper function to fetch events from database
     getEvents = (cb) => {
         console.log('getting events');
         const url = "/api/events";
@@ -47,29 +68,15 @@ class Events extends React.Component {
         }
     }
 
+    // set event in focus manually??
     focusItem = (event) => {
         event.preventDefault();
         console.log(event.target.getAttribute('data-id'));
         this.setState({focusing: event.target.getAttribute('data-id')});
     }
 
-    componentDidMount() {
-        console.log(!!this.props.match.params.id);
-        const focusing = !!this.props.match.params.id;
-        //const focusing = !!this.props.match.params.id;
-        this.getEvents((data) => {
-            console.log(data);
-            if (data) {
-                this.setState({ data: data, focusing: focusing }, () => {
-                    console.log(this.state.data);
-                })
-            }
-            else {
-                console.log("something went wrong");
-            }
-        });
-    }
-
+    
+    // map user events from data.user state array 
     renderUserEvents = () => {
         console.log('called user render');
         if (this.state.data) {
@@ -77,7 +84,7 @@ class Events extends React.Component {
                 console.log(item.id);
                 return (
                     <tr key={item.id} className="listing-row">
-                        <Link to={`/events/${item.id}`} className="listing-item-name"><td><span>{item.name}</span></td></Link>
+                        <td><span className="listing-item-name"><Link to={`/events/${item.id}`} className="event-link">{item.name}</Link></span></td>
                         <td><span className="listing-item listing-item-date"><Moment parse="YYYY-MM-DD" format="MM/DD/YY">{item.date}</Moment></span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -89,12 +96,13 @@ class Events extends React.Component {
         }
     }
 
+    // map all events from data.all state array 
     renderAllEvents = () => {
         if (this.state.data) {
             return this.state.data.all.map(item => {
                 return (
                     <tr key={item.id} className="listing-row" data-id={item.id}>
-                        <Link to={`/events/${item.id}`} className="listing-item-name"><td><span>{item.name}</span></td></Link>
+                        <td><span className="listing-item-name"><Link to={`/events/${item.id}`} className="event-link">{item.name}</Link></span></td>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -106,6 +114,7 @@ class Events extends React.Component {
         }
     }
     
+    // call getEvents again to update event listings
     updateEvents = (cb) => {
         this.getEvents(data => {
             this.setState({data: data}, cb);
@@ -113,11 +122,13 @@ class Events extends React.Component {
     }
 
     render() {
+        console.log("this.state.focusing")
+        console.log(this.state.focusing)
         return (
             <>
 
                 {/* {!!this.state.focusing ? "" : <Bubble />} */}
-                <Bubble loggedIn={this.props.loggedIn}/>
+                <Bubble loggedIn={this.props.loggedIn} focus={this.state.focusing}/>
                 <div id="dark-panel">
                     <div className="listings">
 
@@ -138,7 +149,9 @@ class Events extends React.Component {
                                             <th><span className="listing-header">delete</span></th>
                                         </tr>
                                     </thead>
-                                    {this.renderUserEvents()}
+                                    <tbody>
+                                        {this.renderUserEvents()}
+                                    </tbody>
                                 </table>
                                 <Link to="/create" className="new-event-btn">make new event</Link>
                                 <br /><br /><br /><br />
@@ -162,7 +175,9 @@ class Events extends React.Component {
 
                                         </tr>
                                     </thead>
-                                    {this.renderAllEvents()}
+                                    <tbody>
+                                        {this.renderAllEvents()}
+                                    </tbody>
                                 </table>
                                 <br /><br /><br /><br />
                             </div>
