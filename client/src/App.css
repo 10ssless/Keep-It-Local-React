@@ -233,6 +233,7 @@ li {
 
 #messages {
   overflow: hidden;
+  margin-top: 5em;
 }
 
 #messages-list {

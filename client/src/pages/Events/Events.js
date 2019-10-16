@@ -2,17 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Bubble from "./../../components/Bubble/Bubble";
 import './Events.css';
+import Focus from "../Focus/Focus"
 
 class Events extends React.Component {
 
     state = {
         data: null,
         fetching: false,
-        focusing: null
+        focusing: false
     }
 
     getEvents = (cb) => {
-        const url = "/api/events";
+        const url = '/api/events';
         this.setState({ fetching: true }); //can be used to display some loading animation or something because the loading process can take a little while
         try {
             fetch(url, {
@@ -42,6 +43,7 @@ class Events extends React.Component {
     }
 
     componentDidMount() {
+        console.log('mounting');
         const focusing = !!this.props.match.params.id;
         this.getEvents((data) => {
             if (data) {
@@ -56,10 +58,14 @@ class Events extends React.Component {
     renderEvents = (data) => {
         if (data) {
             return data.map(item => {
+                console.log(data);
+                const dateRaw = item.date.split('-');
+                const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                data.date = date;
                 return (
                     <tr key={item.id} className="listing-row" data-id={item.id}>
                         <td><Link to={`/events/${item.id}`} className="listing-item-name">{item.name}</Link></td>
-                        <td><span className="listing-item listing-item-date">{item.date}</span></td>
+                        <td><span className="listing-item listing-item-date">{date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
                         <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>
@@ -79,7 +85,7 @@ class Events extends React.Component {
     render() {
         return (
             <>
-                {!!this.state.focusing ? null : <Bubble />}
+                {!!this.state.focusing ? <Focus updateEvents={this.updateEvents} {...this.props}/> : <Bubble />}
                 <div id="dark-panel">
                     <div className="listings">
 
@@ -142,6 +148,10 @@ class Events extends React.Component {
             </>
         )
     }
+}
+
+Events.defaultProps = {
+    focusing: false
 }
 
 

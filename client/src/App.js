@@ -2,7 +2,6 @@ import React from "react";
 import { Router, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home/Home"
 import Events from "./pages/Events/Events"
-import Focus from "./pages/Focus/Focus"
 import Create from "./pages/Create/Create"
 import './App.css';
 import history from './history';
@@ -75,9 +74,9 @@ class App extends React.Component {
             return (
               <>
                 <Events
-                  toggleReferal={this.toggleReferal} referalState={this.state.referal} {...props}
+                  toggleReferal={this.toggleReferal} referalState={this.state.referal} {...props} focusing={true}
+                  currentUser={this.state.currentUser}
                 />
-                <Focus currentUser={this.state.currentUser} {...props} />
               </>
             )
           }}
@@ -118,7 +117,9 @@ class App extends React.Component {
       }
     }).then(resp => {
       if (resp.ok) {
-        this.setState({ currentUser: "", loggedIn: false });
+        this.setState({ currentUser: "", loggedIn: false }, () => {
+          history.push('/');
+        });
       }
       else {
         console.log('there was an issue logging out');
