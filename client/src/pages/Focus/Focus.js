@@ -88,8 +88,8 @@ class Focus extends React.Component {
         })
     }
 
-    fetchUpdateEvent = (cb) => {
-        fetch(`/api/event/${this.props.eventID}`, {
+    fetchUpdateEvent = (id, cb) => {
+        fetch(`/api/event/${id}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -159,12 +159,11 @@ class Focus extends React.Component {
     editClick = (event) => {
         event.preventDefault();
         if (this.state.editing) {
-            this.fetchUpdateEvent((resp) => {
+            const { id } = this.props.match.params;
+            this.fetchUpdateEvent(id, (resp) => {
                 const descr = this.state.newDescription;
                 const name = this.state.newName;
-                this.props.updateEvents(() => { // re-fetches the events in the Events component so the name is updated if needed
-                    this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null });
-                });
+                this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null });
             });
         }
         else {
