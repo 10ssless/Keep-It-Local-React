@@ -8,11 +8,19 @@ const voucher_codes = require('voucher-code-generator');
 const moment = require('moment');
 const NodeGeocoder = require('node-geocoder');
 const turf = require('@turf/turf');
-var redis = require('redis').createClient(6379, 'localhost');
+require('dotenv').config()
+
+if(process.env.REDIS_URL){
+  var redis = require('redis').createClient(process.env.REDIS_URL);
+}
+else{
+  var redis = require('redis').createClient(6379, 'localhost');
+}
+
 
 const options = {
   provider: 'mapquest',
-  apiKey: 'vp4Ua1uwTlWCTF3R29jaF0LRR6GZgfuw'
+  apiKey: process.env.DB_MAPQUESTKEY
 };
 const geocoder = NodeGeocoder(options);
 const path = require("path");
