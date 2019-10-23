@@ -14,6 +14,7 @@ class Focus extends React.Component {
         newMessage: null,
         messages: null,
         // when the edit button is clicked the page will respond
+        // immediatelyyyy
         editing: false,
 
         //the new text for name and description when the event is being edited
