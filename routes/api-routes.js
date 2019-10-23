@@ -168,8 +168,8 @@ router.get("/api/allcodes", function (req, res) {
     }
     console.log(mycodes);
     res.json({
-      codes: mycodes,
-      status: 1
+      status: 0,
+      codes: mycodes
     });
   })
 })
@@ -200,29 +200,25 @@ router.get("/api/code", function (req, res) {
       res.redirect(307, "/api/allcodes");
     } else {
       console.log("You're eligible for a new code")
-      res.json({
-        status: 1
-      })
+      // Route used to post a referral code on click
+      db.ReferralCodes.create({
+        creatorID: req.user.userName,
+        // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
+        code: voucher_codes.generate({
+          length: 8,
+          count: 5
+        })[0]
+      }).then(function (resp) {
+        console.log("code created");
+        console.log(resp);
+        res.json({
+          status: 1,
+          codes: [resp.code]
+          });
+      });
     }
     // Checks the lastReferral with current time. Edit the int to set the amount of days
   })
-
-});
-
-router.post("/api/code", function (req, res) {
-  // Route used to post a referral code on click
-  db.ReferralCodes.create({
-    creatorID: req.user.userName,
-    // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
-    code: voucher_codes.generate({
-      length: 8,
-      count: 5
-    })[0]
-  }).then(function (resp) {
-    console.log("code created");
-    console.log(resp);
-    res.json(resp);
-  });
 });
 
 router.post("/api/code/admin", function (req, res) {

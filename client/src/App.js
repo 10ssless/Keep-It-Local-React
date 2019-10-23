@@ -13,16 +13,16 @@ class App extends React.Component {
     currentUser: "",
     loggedIn: false,
     referal: false,
-    referalCodes: null
+    referalCodes: [],
+    status: "old"
   }
 
   toggleReferal = () => {
     let toggle = this.state.referal ? false : true;
     this.getReferralCode(data => {
-      const {status, codes} = data;
-      console.log(status);
+      const { status, codes } = data;
       console.log(codes);
-      this.setState({ referal: toggle, referalCodes: codes });
+      this.setState({ referal: toggle, referalCodes: codes, status: status ? "new" : "old"});
     })
   }
 
@@ -38,8 +38,6 @@ class App extends React.Component {
         cb(data);
       })
   }
-
-
 
   setUser = (username) => {
     this.setState({ currentUser: username, loggedIn: true });
@@ -156,12 +154,13 @@ class App extends React.Component {
             <Redirect to="/" />
           </Route>
         </Router>
-        <Footer 
-        loggedIn={this.state.loggedIn} 
-        referal={this.state.referal} 
-        toggleReferal={this.toggleReferal} 
-        codes={this.state.referalCodes} 
-        logout={this.logout} />
+        <Footer
+          loggedIn={this.state.loggedIn}
+          referal={this.state.referal}
+          toggleReferal={this.toggleReferal}
+          codes={this.state.referalCodes}
+          logout={this.logout}
+          status={this.state.status} />
       </>
     )
   }
