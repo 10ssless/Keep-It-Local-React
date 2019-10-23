@@ -139,12 +139,6 @@ class Events extends React.Component {
                         </div>
                     </div>
                 </div>
-
-
-
-                <div id="refer-box" onClick={this.props.toggleReferal} style={this.props.referalState ? { "display": "block" } : { "display": "none" }}>
-                    IT WORKED
-                </div>
             </>
         )
     }

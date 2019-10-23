@@ -3,36 +3,32 @@ const router = require("express").Router();
 const db = require("../models");
 const passport = require("../config/passport");
 const isAuthenticated = require("../config/middleware/isAuthenticated");
-const notAuthenticated = require("../config/middleware/notAuthenticated");
 const connection = require('../config/connection');
-const Messages = require('../models/messages');
 const voucher_codes = require('voucher-code-generator');
 const moment = require('moment');
 const NodeGeocoder = require('node-geocoder');
 const turf = require('@turf/turf');
+require('dotenv').config()
+
+if(process.env.REDIS_URL){
+  var redis = require('redis').createClient(process.env.REDIS_URL);
+}
+else{
+  var redis = require('redis').createClient(6379, 'localhost');
+}
+
+
 const options = {
   provider: 'mapquest',
-  apiKey: 'vp4Ua1uwTlWCTF3R29jaF0LRR6GZgfuw'
+  apiKey: process.env.DB_MAPQUESTKEY
 };
 const geocoder = NodeGeocoder(options);
 const path = require("path");
 
-/*
-geocoder.geocode("300 Atrium Drive, Somerset, NJ", function ( err, data ) {
-        console.log("-------------------------");
-        console.log(data);
-      });
-*/
-
-
-
-
-
 // ====================== render/html routes ========================================//
 
 //returns user object as JSON object if the user is still logged in/session is still active
-router.get("/currentUser", function(req, res){
-  console.log(`req.user: ${JSON.stringify(req.user)}`);
+router.get("/currentUser", function (req, res) {
   req.user ? res.send(req.user) : res.sendStatus(400);
 });
 
@@ -42,13 +38,10 @@ router.get("/api/logout", isAuthenticated, function (req, res) {
 });
 
 router.get("/api/events", function (req, res) {
-  console.log(`req.user: ${JSON.stringify(req.user)}`);
-  console.log(req.user.userName);
   if (req.user) {
     let all = []; //stores all events in the area
     let user = []; //stores all the events the user created
     let currentLoc = formatCoords(req.user.currentLocation);
-    console.log(currentLoc);
     const options = {
       units: 'miles'
     };
@@ -63,13 +56,9 @@ router.get("/api/events", function (req, res) {
       ]
     }).then(function (dbEvents) {
       dbEvents.forEach(function (element) {
-        console.log('data vals: ');
-        console.log(element.dataValues);
         let destinationCoords = formatCoords(element.dataValues.coords);
         let distance = turf.distance(currentLoc, destinationCoords, options);
-        console.log(distance);
         if (distance <= 30) {
-          console.log(distance);
           let dataVals = element.dataValues;
           dataVals['distance'] = toTwoPlaces(distance);
           all.push(dataVals);
@@ -91,8 +80,8 @@ router.get("/api/events", function (req, res) {
           dataVals['distance'] = toTwoPlaces(distance);
           user.push(item.dataValues);
         });
-        console.log(all)
-        console.log(user)
+        console.log(all);
+        console.log(user);
         res.json({
           "all": all,
           "user": user
@@ -108,14 +97,12 @@ router.get("/api/events", function (req, res) {
 
 //used for logging in after signing up the first time
 router.post("/api/login", passport.authenticate("local"), function (req, res) {
-  console.log('tried to login');
   res.end();
 });
 
 //logging in normally and updating location
 router.put("/api/login", passport.authenticate("local"), function (req, res) {
   console.log('tried to login');
-  console.log(req.body.location);
 
   db.User.update({
     currentLocation: req.body.location
@@ -131,13 +118,8 @@ router.put("/api/login", passport.authenticate("local"), function (req, res) {
 
 //create entry in the table for new user
 router.post("/api/signup", function (req, res) {
-  console.log('req.body: ');
-  console.log(req.body);
   currentUser = req.body.username;
   currentPassword = req.body.password;
-  // let now = moment().format();
-  // now = momentToString(now);
-  // now = now.toISOString()
   if (!currentUser || !currentPassword) {
     res.statusMessage = 'Bad username or password';
     res.status(400).end();
@@ -193,7 +175,10 @@ router.get("/api/allcodes", function (req, res) {
       }
     }
     console.log(mycodes);
-    res.send(mycodes);
+    res.json({
+      status: 0,
+      codes: mycodes
+    });
   })
 })
 
@@ -207,63 +192,41 @@ router.get("/api/code", function (req, res) {
     // Gets the current time in a moment object
     let currentTime = moment().format();
 
-    let test = '2019-07-11T11:49:52-04:00'
-
-
     // Calls our helper function to format the current time to match format of the time on the database
     currentTime = momentToString(currentTime);
     currentTime = moment(currentTime);
 
-
-    // test = momentToString(test);
-    // test = moment(test);
-
-    let eligible = false;
     let lastRef = new Date(result.lastReferral).toISOString();
     lastRef = moment(lastRef);
 
     let userStart = new Date(result.createdAt).toISOString();
     userStart = moment(userStart);
 
-    console.log(currentTime);
-    console.log("========")
-    console.log(lastRef);
-    console.log("=====")
-    console.log(lastRef.diff(currentTime, 'days'));
     //change the test to currentTime
     if (lastRef.diff(currentTime, 'days') < 3) {
       console.log("You're not eligible for a new code")
-      res.json({
-        status: 1
-      })
+      res.redirect(307, "/api/allcodes");
     } else {
       console.log("You're eligible for a new code")
-      res.json({
-        status: 2
-      })
+      // Route used to post a referral code on click
+      db.ReferralCodes.create({
+        creatorID: req.user.userName,
+        // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
+        code: voucher_codes.generate({
+          length: 8,
+          count: 5
+        })[0]
+      }).then(function (resp) {
+        console.log("code created");
+        console.log(resp);
+        res.json({
+          status: 1,
+          codes: [resp.code]
+          });
+      });
     }
-
-
     // Checks the lastReferral with current time. Edit the int to set the amount of days
-
   })
-
-});
-
-router.post("/api/code", function (req, res) {
-  // Route used to post a referral code on click
-  db.ReferralCodes.create({
-    creatorID: req.user.userName,
-    // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
-    code: voucher_codes.generate({
-      length: 8,
-      count: 5
-    })[0]
-  }).then(function (resp) {
-    console.log("code created");
-    console.log(resp);
-    res.json(resp);
-  });
 });
 
 router.post("/api/code/admin", function (req, res) {
@@ -290,26 +253,20 @@ router.post("/api/code/admin", function (req, res) {
 
 router.get("/api/rsvp/:id", function (req, res) {
   // RSVP create and get
-  // console.log("GET /api/rsvp")
   let event_id = req.params.id;
-  console.log("event_id received " + event_id)
   db.Events.findOne({
     where: {
       id: event_id
     }
   }).then(function (dbEvents) {
-    // console.log("looking for rsvp")
-    // console.log(dbEvents)
     let event = {
       upVotes: dbEvents.dataValues.upVotes
     }
-    // console.log("rsvp count "+event.upVotes)
     res.send(event)
   })
 })
 
 router.put("/api/rsvp", function (req, res) {
-  console.log("PUT /api/rsvp")
   let event_id = req.body.event_id;
   db.Events.update({
     upVotes: db.sequelize.literal('upVotes + 1')
@@ -327,19 +284,37 @@ router.put("/api/rsvp", function (req, res) {
 
 router.get('/api/event/:id', function (req, res) {
   // get a single event
-  db.Events.findOne({
-    where: {
-      id: req.params.id
-    },
-    plain: true
-  }).then(function (data) {
-    console.log(data);
-    res.json(data);
+  redis.get(req.params.id, function (err, reply) {
+    if (err) {
+      console.log('error getting cached item');
+    }
+    else if (reply) //Book exists in cache
+    {
+      console.log('in cache!');
+      console.log(JSON.parse(reply));
+      res.json(JSON.parse(reply));
+    }
+    else {
+      db.Events.findOne({
+        where: {
+          id: req.params.id
+        },
+        plain: true
+      }).then(function (data) {
+        console.log(data.dataValues);
+        redis.set(data.dataValues.id, JSON.stringify(data.dataValues), function () {
+          res.json(data);
+        });
+      })
+    }
   })
 })
 
+
+
 router.put("/api/event/:id", function (req, res) {
   //change name and/or description of an event
+  console.log(req.body.name);
   db.Events.update({
     name: req.body.name,
     description: req.body.description
@@ -347,8 +322,20 @@ router.put("/api/event/:id", function (req, res) {
     where: {
       id: req.params.id
     }
-  }).then(function (data) {
-    res.json(data);
+  }).then(function () {
+    // .update() function doesn't return any usable data
+    // have to findOne to get the data and update the cache
+    db.Events.findOne({
+      where: {
+        id: req.params.id
+      },
+      plain: true
+    }).then(function (data) {
+      console.log(data.dataValues);
+      redis.set(data.dataValues.id, JSON.stringify(data.dataValues), function () {
+        res.json(data);
+      });
+    })
   }).catch(function (err) {
     res.json(err);
   });
@@ -357,7 +344,6 @@ router.put("/api/event/:id", function (req, res) {
 router.post("/api/event", function (req, res) {
   //create new event with a name, category, username, and location passed in
   //upVotes is initially 0, and the creatorID is the user's id that is currently logged in.
-  console.log(req.body);
   let description = "";
   if (req.body.description) {
     description = req.body.description
@@ -365,20 +351,18 @@ router.post("/api/event", function (req, res) {
   geocoder.geocode(req.body.location, function (err, data) {
 
     let loc = data[0].latitude.toString() + ', ' + data[0].longitude.toString();
-    console.log(data[0].latitude.toString() + ', ' + data[0].longitude.toString());
 
     let from = turf.point([data[0].latitude, data[0].longitude]);
     let userLoc = req.user.currentLocation;
     userLoc = userLoc.split(', ');
 
     let to = turf.point([userLoc[0], userLoc[1]]);
-    console.log(userLoc[0] + ', ' + userLoc[1]);
+
     let options = {
       units: 'miles'
     };
 
     let distance = turf.distance(from, to, options);
-    console.log('distance: ' + distance);
 
     if (distance >= 30) {
       res.statusMessage = "Too far away";
@@ -394,11 +378,6 @@ router.post("/api/event", function (req, res) {
       res.status(400).end();
       return;
     }
-
-    // else if(date is in the past){
-    // res.statusMessage = "Invalid Date";
-    // res.status(400).end();
-    // }
     else {
       db.Events.create({
         name: req.body.name,
@@ -413,8 +392,6 @@ router.post("/api/event", function (req, res) {
         // endTime: req.body.endTime,
         upVotes: 0
       }).then(function (resp) {
-        console.log("event created");
-        console.log(resp.dataValues.id);
         eventID = resp.dataValues.id;
       }).then(function () {
         //create a new table with name Messages_<eventname>
@@ -439,13 +416,10 @@ router.post("/api/event", function (req, res) {
 router.post("/api/message", function (req, res) {
   // create new message 
   let event_id = req.body.id;
-  //console.log('content: ');
   let content = escapeString(req.body.content);
-  console.log(`INSERT INTO Messages_${event_id}(content, creatorID) VALUES("${content}", "${req.user.userName}");`);
   connection.query(`INSERT INTO Messages_${event_id}(content, creatorID) VALUES("${content}", "${req.user.userName}");`,
     function (err, result) {
       if (err) throw err.stack;
-      console.log('got everything');
       console.table(result);
       res.end();
     });
@@ -466,7 +440,7 @@ router.get("/api/messages/:id", function (req, res) {
   });
 });
 
-router.get(function(req, res){
+router.get(function (req, res) {
   res.sendFile(path.join(__dirname, "../client/build/index.html")) || res.sendFile(path.join(__dirname, "../client/public/index.html"));
 })
 
@@ -493,7 +467,7 @@ function escapeString(str) {
       case "\\":
       case "%":
         return "\\" + char; // prepends a backslash to backslash, percent,
-        // and double/single quotes
+      // and double/single quotes
     }
   });
 }
