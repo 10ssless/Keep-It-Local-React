@@ -215,7 +215,7 @@ class Focus extends React.Component {
                             <p className="event"> located at <span className="event-location">{this.state.location}</span></p>
                             <p className="event"> on <span className="event-date">{this.state.date}</span></p>
                             <p className="event">hosted by <span className="event-creator">{this.state.creatorID}</span></p>
-                            <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>Complete Edit</button>
+                            <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>confirm your edits</button>
                         </>
                         :
                         <>
