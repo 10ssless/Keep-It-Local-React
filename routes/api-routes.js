@@ -167,7 +167,10 @@ router.get("/api/allcodes", function (req, res) {
       }
     }
     console.log(mycodes);
-    res.send(mycodes);
+    res.json({
+      codes: mycodes,
+      status: 1
+    });
   })
 })
 
@@ -185,11 +188,6 @@ router.get("/api/code", function (req, res) {
     currentTime = momentToString(currentTime);
     currentTime = moment(currentTime);
 
-
-    // test = momentToString(test);
-    // test = moment(test);
-
-    let eligible = false;
     let lastRef = new Date(result.lastReferral).toISOString();
     lastRef = moment(lastRef);
 
@@ -199,19 +197,14 @@ router.get("/api/code", function (req, res) {
     //change the test to currentTime
     if (lastRef.diff(currentTime, 'days') < 3) {
       console.log("You're not eligible for a new code")
-      res.json({
-        status: 1
-      })
+      res.redirect(307, "/api/allcodes");
     } else {
       console.log("You're eligible for a new code")
       res.json({
-        status: 2
+        status: 1
       })
     }
-
-
     // Checks the lastReferral with current time. Edit the int to set the amount of days
-
   })
 
 });

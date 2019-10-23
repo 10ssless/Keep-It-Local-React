@@ -12,13 +12,34 @@ class App extends React.Component {
   state = {
     currentUser: "",
     loggedIn: false,
-    referal: false
+    referal: false,
+    referalCodes: null
   }
 
   toggleReferal = () => {
     let toggle = this.state.referal ? false : true;
-    this.setState({ referal: toggle });
+    this.getReferralCode(data => {
+      const {status, codes} = data;
+      console.log(status);
+      console.log(codes);
+      this.setState({ referal: toggle, referalCodes: codes });
+    })
   }
+
+  getReferralCode = cb => {
+    fetch(`/api/code`, {
+      method: "GET"
+    })
+      .then(data => {
+        console.log(data);
+        return data.json();
+      })
+      .then(data => {
+        cb(data);
+      })
+  }
+
+
 
   setUser = (username) => {
     this.setState({ currentUser: username, loggedIn: true });
@@ -57,7 +78,7 @@ class App extends React.Component {
           <Route exact path="/" render={(props) => {
             return (
               <Events
-                toggleReferal={this.toggleReferal} referalState={this.state.referal} {...props}
+                {...props}
               />
             )
           }}
@@ -65,7 +86,7 @@ class App extends React.Component {
           <Route exact path="/events" render={(props) => {
             return (
               <Events
-                toggleReferal={this.toggleReferal} referalState={this.state.referal} {...props}
+                {...props}
               />
             )
           }}
@@ -74,7 +95,7 @@ class App extends React.Component {
             return (
               <>
                 <Events
-                  toggleReferal={this.toggleReferal} referalState={this.state.referal} {...props} focusing={true}
+                  {...props} focusing={true}
                   currentUser={this.state.currentUser}
                 />
               </>
@@ -85,7 +106,6 @@ class App extends React.Component {
             return (
               <Create
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferal={this.toggleReferal} referalState={this.state.referal}
                 {...props}
               />
             )
@@ -96,15 +116,15 @@ class App extends React.Component {
     }
     else {
       return (
-          <Route exact path="/" render={(props) => {
-            return (
-              <Home
-                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                setUser={this.setUser} getLocation={this.getLocation} {...props}
-              />
-            )
-          }}
-          />
+        <Route exact path="/" render={(props) => {
+          return (
+            <Home
+              loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+              setUser={this.setUser} getLocation={this.getLocation} {...props}
+            />
+          )
+        }}
+        />
       );
     }
   }
@@ -136,7 +156,12 @@ class App extends React.Component {
             <Redirect to="/" />
           </Route>
         </Router>
-        <Footer loggedIn={this.state.loggedIn} toggleReferal={this.toggleReferal} logout={this.logout} />
+        <Footer 
+        loggedIn={this.state.loggedIn} 
+        referal={this.state.referal} 
+        toggleReferal={this.toggleReferal} 
+        codes={this.state.referalCodes} 
+        logout={this.logout} />
       </>
     )
   }
