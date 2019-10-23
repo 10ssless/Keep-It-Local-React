@@ -8,9 +8,8 @@ function Bubble(props){
     return(
         <div id="bubble">
             <Link to={props.loggedIn ? "/events" : "/"}>
-                <img src="./header2.gif" alt="Keep It Local logo" id="header-logo"/>
+                <img src={__dirname + "header2.gif"} id="header-logo" alt="header gif"/>
             </Link>
-
             <div style={props.focus ? {"display":"none"} : {"display":"block"}}>
                 <hgroup className="speech-bubble">
                     <h1>WHAT'S<br/>HAPPENIN' TN?</h1>

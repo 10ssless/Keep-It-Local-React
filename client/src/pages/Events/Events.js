@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Bubble from "./../../components/Bubble/Bubble";
-import Focus from './../Focus/Focus'
 import './Events.css';
 import Moment from "react-moment"
 import 'moment-timezone';
@@ -36,18 +35,15 @@ class Events extends React.Component {
 
     // helper function to fetch events from database
     getEvents = (cb) => {
-        console.log('getting events');
         const url = "/api/events";
         this.setState({ fetching: true }); //can be used to display some loading animation or something because the loading process can take a little while
         try {
-            console.log("fetching");
             fetch(url, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).then(resp => {
-                    console.log(resp);
                     if (!resp.ok) {
                         console.log(`there was an issue logging in `);
                     }
@@ -55,10 +51,10 @@ class Events extends React.Component {
                         return resp.json();
                     }
                 }).then(resp => {
-                    console.log(resp);
                     cb(resp);
                 })
                 .catch(err => {
+                    console.log(`there was an issue logging in `);
                     console.log(err);
                 })
         }
@@ -68,41 +64,24 @@ class Events extends React.Component {
         }
     }
 
-    // set event in focus manually??
-    focusItem = (event) => {
-        event.preventDefault();
-        console.log(event.target.getAttribute('data-id'));
-        this.setState({focusing: event.target.getAttribute('data-id')});
+    componentDidMount() {
+        const focusing = !!this.props.match.params.id;
+        this.getEvents((data) => {
+            if (data) {
+                this.setState({ data: data, focusing: focusing });
+            }
+            else {
+                console.log("something went wrong");
+            }
+        });
     }
 
-    
-    // map user events from data.user state array 
-    renderUserEvents = () => {
-        console.log('called user render');
-        if (this.state.data) {
-            return this.state.data.user.map(item => {
-                console.log(item.id);
-                return (
-                    <tr key={item.id} className="listing-row">
-                        <td><span className="listing-item-name"><Link to={`/events/${item.id}`} className="event-link">{item.name}</Link></span></td>
-                        <td><span className="listing-item listing-item-date"><Moment parse="YYYY-MM-DD" format="MM/DD/YY">{item.date}</Moment></span></td>
-                        <td><span className="listing-item listing-item-cat">{item.category}</span></td>
-                        <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
-                        <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>
-                        <td><span className="listing-item listing-item-id">{item.creatorID}</span></td>
-                    </tr>
-                );
-            });
-        }
-    }
-
-    // map all events from data.all state array 
-    renderAllEvents = () => {
-        if (this.state.data) {
-            return this.state.data.all.map(item => {
+    renderEvents = (data) => {
+        if (data) {
+            return data.map(item => {
                 return (
                     <tr key={item.id} className="listing-row" data-id={item.id}>
-                        <td><span className="listing-item-name"><Link to={`/events/${item.id}`} className="event-link">{item.name}</Link></span></td>
+                        <td><Link to={`/events/${item.id}`} className="listing-item-name">{item.name}</Link></td>
                         <td><span className="listing-item listing-item-date">{item.date}</span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
@@ -150,14 +129,13 @@ class Events extends React.Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {this.renderUserEvents()}
+                                        {!!this.state.data ? this.renderEvents(this.state.data.user) : null}
                                     </tbody>
                                 </table>
                                 <Link to="/create" className="new-event-btn">make new event</Link>
-                                <br /><br /><br /><br />
                             </div>
                         </div>
-                        <br />
+
                         <div className="list-group all-listings">
                             <h3 className="listings-section">
                                 ALL EVENTS
@@ -176,10 +154,9 @@ class Events extends React.Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {this.renderAllEvents()}
+                                        {!!this.state.data ? this.renderEvents(this.state.data.all) : null}
                                     </tbody>
                                 </table>
-                                <br /><br /><br /><br />
                             </div>
                         </div>
                     </div>

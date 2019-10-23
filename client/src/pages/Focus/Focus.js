@@ -23,7 +23,6 @@ class Focus extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         const { id } = this.props.match.params;
-        console.log(prevProps.match.params.id)
         // only fetch data if a new event is selected - rather than fetch data that is already there
         if (id !== prevProps.match.params.id) {
             this.fetchInformation(id, data => {
@@ -38,11 +37,9 @@ class Focus extends React.Component {
 
     componentDidMount() {
         const { id } = this.props.match.params;
-        console.log(id);
         this.fetchInformation(id, (data)=> {
             this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: data.date, creatorID: data.creatorID }, () => {
                 this.fetchMessages(id, (messages) => {
-                    //console.log(messages);
                     this.setState({ messages: messages });
                 })
             });
@@ -50,7 +47,6 @@ class Focus extends React.Component {
     }
 
     fetchInformation = (id, cb) => {
-        console.log(id);
         fetch(`/api/event/${id}`, {
             method: "GET",
             headers: {
@@ -66,7 +62,6 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                console.log(data);
                 cb(data);
             }
         })
@@ -88,14 +83,13 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                //console.log(data);
                 cb(data);
             }
         })
     }
 
-    fetchUpdateEvent = (cb) => {
-        fetch(`/api/event/${this.props.eventID}`, {
+    fetchUpdateEvent = (id, cb) => {
+        fetch(`/api/event/${id}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -114,7 +108,6 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                console.log(data);
                 cb(data);
             }
         })
@@ -149,7 +142,6 @@ class Focus extends React.Component {
                 'Content-Type': 'application/json'
             }
         }).then((resp) => {
-            console.log(resp);
             if (resp.ok) {
                 return resp.json();
             }
@@ -167,12 +159,11 @@ class Focus extends React.Component {
     editClick = (event) => {
         event.preventDefault();
         if (this.state.editing) {
-            this.fetchUpdateEvent((resp) => {
+            const { id } = this.props.match.params;
+            this.fetchUpdateEvent(id, (resp) => {
                 const descr = this.state.newDescription;
                 const name = this.state.newName;
-                this.props.updateEvents(() => { // re-fetches the events in the Events component so the name is updated if needed
-                    this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null }, () => { console.log(this.state) });
-                });
+                this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null });
             });
         }
         else {
@@ -213,7 +204,6 @@ class Focus extends React.Component {
                     {this.state.editing ?
                         <>
                             <h1 id="message-header"><input name="newName" className="event-name" type="text" value={this.state.newName} onChange={event => this.onTextChange(event)} /></h1>
-                            <br /><br />
                             <div id="message-description">
                                 <input id="description" className="event" type="text" name="newDescription" value={this.state.newDescription} onChange={event => this.onTextChange(event)} />
                             </div>
@@ -226,7 +216,6 @@ class Focus extends React.Component {
                         :
                         <>
                             <h1 id="message-header"><span className="event-name">{this.state.eventName}</span></h1>
-                            <br /><br />
                             <div id="message-description">
                                 <p id="description" className="event">{this.state.description}</p>
                             </div>
@@ -238,14 +227,11 @@ class Focus extends React.Component {
                             {this.props.currentUser === this.state.creatorID ? <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> : <button type="button" id="side-btn" className="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>}
                         </>
                     }
-                    <br /><br />
 
                     <div id="messages">
-                        <br />
                         <h4>Messages</h4>
                         <ul id="messages-list">
                             {this.renderMessages()}
-                            <br /><br />
                         </ul>
                         <input type="text" id="new-msg" placeholder="new message" name="newMessage" onChange={event => this.onTextChange(event)} />
                         <button type="button" className="msg-btn" onClick={this.submitMessage}>post</button>

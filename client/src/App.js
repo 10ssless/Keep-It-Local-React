@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route } from "react-router-dom";
+import { Router, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home/Home"
 import Events from "./pages/Events/Events"
 import Focus from "./pages/Focus/Focus"
@@ -24,15 +24,14 @@ class App extends React.Component {
         'Content-Type': 'application/json'
       }
     }).then((resp) => {
-      if(resp.ok) {
+      if (resp.ok) {
         return resp.json();
       }
-      else{
-        console.log('user not signed in');
+      else {
         return;
       }
     }).then(data => {
-      if(data){
+      if (data) {
         this.setUser(data.userName);
       }
     })
@@ -117,11 +116,12 @@ class App extends React.Component {
             )
           }}
           />
-          <Route exact path="/create" render={() => {
+          <Route exact path="/create" render={(props) => {
             return (
               <Create
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 toggleReferral={this.toggleReferral} referralState={this.state.referral}
+                {...props}
               />
             )
           }}
@@ -151,6 +151,9 @@ class App extends React.Component {
       <>
         <Router history={history}>
           {this.renderRoutes()}
+          <Route path="*" >
+            <Redirect to="/" />
+          </Route>
         </Router>
         <Footer loggedIn={this.state.loggedIn} toggleReferral={this.toggleReferral} logout={this.logout}/>
       </>

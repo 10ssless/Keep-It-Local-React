@@ -29,10 +29,6 @@ geocoder.geocode("300 Atrium Drive, Somerset, NJ", function ( err, data ) {
 
 
 // ====================== render/html routes ========================================//
-router.get("/", notAuthenticated, function (req, res) {
-  console.log("login");
-  res.send("login")
-});
 
 //returns user object as JSON object if the user is still logged in/session is still active
 router.get("/currentUser", function(req, res){
@@ -40,21 +36,9 @@ router.get("/currentUser", function(req, res){
   req.user ? res.send(req.user) : res.sendStatus(400);
 });
 
-router.get("/login", notAuthenticated, function (req, res) {
-  res.render("login");
-});
-
-router.get("/signup", notAuthenticated, function (req, res) {
-  res.render("signup");
-});
-
-router.get("/logout", isAuthenticated, function (req, res) {
+router.get("/api/logout", isAuthenticated, function (req, res) {
   req.logout();
   res.end();
-});
-
-router.get("/create", isAuthenticated, function (req, res) {
-  res.render("create");
 });
 
 router.get("/api/events", function (req, res) {
@@ -117,96 +101,6 @@ router.get("/api/events", function (req, res) {
     });
   } else {
     res.end();
-  }
-});
-
-router.get("/event/:id", isAuthenticated, function (req, res) {
-  console.log(req.user);
-  if (req.user) {
-    let all = []; // stores all events
-    let user = [];  //stores all the user events
-    let msgs = [];
-    let focus;
-    let currentLoc = req.user.currentLocation;
-    const options = {
-      units: 'miles'
-    };
-    db.Events.findAll({
-      where: {
-        creatorID: {
-          [db.Sequelize.Op.ne]: req.user.userName
-        }
-      },
-      order: [
-        ['date', 'DESC']
-      ]
-    }).then(function (dbEvents) {
-      dbEvents.forEach(function (element) {
-        let destinationCoords = element.dataValues.coords;
-        let distance = distanceBetween(currentLoc, destinationCoords, options);
-        console.log(distance);
-        if (distance <= 30) {
-          console.log(distance);
-          let dataVals = element.dataValues;
-          dataVals['distance'] = toTwoPlaces(distance);
-          all.push(dataVals);
-        }
-      });
-    }).then(function () {
-      db.Events.findAll({
-        where: {
-          creatorID: req.user.userName
-        },
-        order: [
-          ['date', 'DESC']
-        ]
-      }).then(function (dbUserEvents) {
-        dbUserEvents.forEach(function (item) {
-          let destinationCoords = item.dataValues.coords;
-          let distance = distanceBetween(currentLoc, destinationCoords, options);
-          let dataVals = item.dataValues;
-          dataVals['distance'] = toTwoPlaces(distance);
-          user.push(item.dataValues);
-        })
-      }).then(function () {
-        db.Events.findAll({
-          where: {
-            id: req.params.id
-          }
-        }).then(function (dbUserEvents) {
-          console.log('dbUserEvents');
-          console.log(dbUserEvents);
-          let owner = req.user.userName === dbUserEvents[0].dataValues.creatorID;
-          focus = {
-            data: dbUserEvents[0].dataValues,
-            ownedByUser: owner
-            // equals: function(userID) {
-            //   if(this.data.creatorID == userID) {
-            //     return true
-            //   }
-            //   else {
-            //     return false
-            //   }
-            // }
-          }
-        }).then(function () {
-          connection.query(`SELECT * FROM Messages_${req.params.id} ORDER BY id ASC;`, function (err, result) {
-            if (err) throw err.stack;
-            console.log("Messages_" + req.params.id);
-            console.table(result);
-            res.render('focus', {
-              all_events: all,
-              user_events: user,
-              select_event: focus,
-              messages: result
-            });
-          });
-        })
-
-      });
-    });
-  } else {
-    res.redirect("/");
   }
 });
 

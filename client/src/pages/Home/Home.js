@@ -36,17 +36,12 @@ class Home extends React.Component {
                         }
                     })
                         .then(resp => {
-                            console.log(resp);
                             if (resp.ok) {
                                 this.props.setUser(this.state.username);
                             }
                             else {
-                                console.log(`there was an issue logging in `);
                             }
                         })
-                    // .then(json => {
-                    //     console.log(json)
-                    // });
                 } catch (error) {
                     console.error('Error:', error);
                 }
@@ -78,7 +73,6 @@ class Home extends React.Component {
                         }
                     })
                         .then(resp => {
-                            console.log(resp);
                             if (resp.ok) {
                                 this.props.setUser(this.state.username);
                             }
@@ -86,9 +80,6 @@ class Home extends React.Component {
                                 console.log(`there was an issue logging in `);
                             }
                         })
-                    // .then(json => {
-                    //     console.log(json)
-                    // });
                 } catch (error) {
                     console.error('Error:', error);
                 }
@@ -109,14 +100,11 @@ class Home extends React.Component {
     }
 
     changeFormType = () => {
-        console.log("switched");
         let newType = this.state.formType === "login" ? "signUp" : "login";
         this.setState({ formType: newType, username: "", password: "", referralCode: "" });
     }
 
     formRender = () => {
-        console.log(this.state.formType);
-        console.log()
          return (
             <Form
                 type={this.state.formType}
@@ -130,7 +118,6 @@ class Home extends React.Component {
     }
 
     render() {
-        console.log(this.state.formType)
         return (
             <>
                 {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
