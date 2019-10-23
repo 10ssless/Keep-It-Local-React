@@ -149,10 +149,11 @@ li {
   color: white;
 }
 
-/* .listing-row:hover{
+.listing-item-name:hover {
   color: rgb(250, 149, 159);
   cursor: pointer;
-} */
+  text-decoration: none;
+}
 
 .event-link:hover {
   color: rgb(250, 149, 159);
@@ -192,7 +193,8 @@ li {
 }
 
 .msg-user {
-  color: rgb(154, 194, 255);
+  /* color: rgb(154, 194, 255); */
+  color: rgb(121, 255, 199);
   margin-right: 10px;
 }
 
@@ -230,6 +232,7 @@ li {
 
 
 #messages {
+  margin-top:7vh;
   overflow: hidden;
 }
 

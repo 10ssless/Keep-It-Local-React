@@ -82,7 +82,7 @@ class Events extends React.Component {
                 return (
                     <tr key={item.id} className="listing-row" data-id={item.id}>
                         <td><Link to={`/events/${item.id}`} className="listing-item-name">{item.name}</Link></td>
-                        <td><span className="listing-item listing-item-date">{item.date}</span></td>
+                        <td><span className="listing-item listing-item-date"><Moment parse="YYYY-MM-DD" format="MM/DD/YY">{item.date}</Moment></span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
                         <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>

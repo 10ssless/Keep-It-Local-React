@@ -1,5 +1,7 @@
 import React from "react";
+import Moment from "react-moment"
 import './Focus.css';
+import 'moment-timezone';
 
 class Focus extends React.Component {
 
@@ -124,8 +126,8 @@ class Focus extends React.Component {
                     const time = dateTime[1];
                     return (
                         <li>
-                            <span className="msg-date">{date}</span>
-                            <span className="msg-time">{time}</span>
+                            <span className="msg-date"><Moment format="MMMM D, YYYY">{date}</Moment></span>
+                            <span className="msg-time"><Moment format="MM:ss A" tz="America/New_York">{time}</Moment></span>
                             <span className="msg-user">{item.creatorID}</span>
                             {item.content}
                         </li>
@@ -177,13 +179,14 @@ class Focus extends React.Component {
     }
 
     submitMessage = () => {
+        const { id } = this.props.match.params;
         fetch(`/api/message`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: this.props.eventID,
+                id: id,
                 content: this.state.newMessage
             })
         }).then(resp => {
@@ -222,7 +225,7 @@ class Focus extends React.Component {
                             </div>
                             <p className="event"><span id="rsvp-count" className="event-votes">{this.state.numRSVP}</span> rsvps for this event.</p>
                             <p className="event"> located at <span className="event-location">{this.state.location}</span></p>
-                            <p className="event"> on <span className="event-date">{this.state.date}</span></p>
+                            <p className="event"> on <span className="event-date"><Moment parse="YYYY-MM-DD" format="MMMM D, YYYY">{this.state.date}</Moment></span></p>
                             <p className="event">hosted by <span className="event-creator">{this.state.creatorID}</span></p>
                             {/*this check should be a backend route, but for now keep it as front-end check*/}
                             {this.props.currentUser === this.state.creatorID ? <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> : <button type="button" id="side-btn" className="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>}
