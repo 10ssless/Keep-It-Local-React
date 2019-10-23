@@ -86,6 +86,7 @@ class Focus extends React.Component {
                 'Content-Type': 'application/json'
             }
         }).then((resp) => {
+            console.log(resp);
             if (resp.ok) {
                 return resp.json();
             }
@@ -151,12 +152,17 @@ class Focus extends React.Component {
 
     makeRSVP = (event) => {
         event.preventDefault();
+        const { id } = this.props.match.params;
         fetch(`/api/rsvp`, {
-            method: "GET",
+            method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({
+                event_id: id
+            })
         }).then((resp) => {
+            console.log(resp);
             if (resp.ok) {
                 return resp.json();
             }
@@ -166,7 +172,9 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                this.setState({ numRSVP: this.state.numRSVP + 1 });
+                const dateRaw = data.date.split('-');
+                const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                this.setState({eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID});
             }
         })
     }

@@ -268,14 +268,26 @@ router.get("/api/rsvp/:id", function (req, res) {
 
 router.put("/api/rsvp", function (req, res) {
   let event_id = req.body.event_id;
+  console.log(req.body.event_id);
+  console.log(event_id);
   db.Events.update({
     upVotes: db.sequelize.literal('upVotes + 1')
   }, {
     where: {
       id: event_id
     }
-  }).then(function () {
-    res.end();
+  }).then(function (data) {
+    db.Events.findOne({
+      where: {
+        id: event_id
+      },
+      plain: true
+    }).then(function (data) {
+      console.log(data.dataValues);
+      redis.set(data.dataValues.id, JSON.stringify(data.dataValues), function () {
+        res.json(data);
+      });
+    })
   }).catch(function (err) {
     console.log(err);
     res.json(err);
