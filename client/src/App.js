@@ -1,11 +1,11 @@
 import React from "react";
 import { Router, Route, Redirect } from "react-router-dom";
-import Home from "./pages/Home/Home"
-import Events from "./pages/Events/Events"
-import Create from "./pages/Create/Create"
+import Home from "./pages/Home/Home";
+import Events from "./pages/Events/Events";
+import Create from "./pages/Create/Create";
 import './App.css';
 import history from './history';
-import Footer from './components/Footer/Footer'
+import Footer from './components/Footer/Footer';
 
 class App extends React.Component {
 

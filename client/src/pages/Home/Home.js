@@ -3,6 +3,7 @@ import Bubble from "./../../components/Bubble/Bubble";
 import Footer from "./../../components/Footer/Footer";
 import Form from "./../../components/Form/Form";
 import './Home.css';
+import Loading from "./../../components/Loading/Loading.js";
 
 class Home extends React.Component {
 
@@ -10,7 +11,8 @@ class Home extends React.Component {
         formType: "login",
         username: "",
         password: "",
-        referralCode: ""
+        referralCode: "",
+        loading: false
     }
 
     componentDidMount() {
@@ -19,6 +21,7 @@ class Home extends React.Component {
 
     newUser = event => {
         event.preventDefault();
+        this.setState({ loading: true });
         this.props.getLocation((loc) => {
             if (loc) {
                 const data = {
@@ -27,25 +30,22 @@ class Home extends React.Component {
                     "location": `${loc.latitude}, ${loc.longitude}`,
                     "referral": this.state.referralCode
                 }
-                try {
-                    fetch(`/api/signup`, {
-                        method: 'POST', // or 'PUT'
-                        body: JSON.stringify(data), // data can be `string` or {object}!
-                        headers: {
-                            'Content-Type': 'application/json'
+                fetch(`/api/signup`, {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(data), // data can be `string` or {object}!
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(resp => {
+                        if (resp.ok) {
+                            this.props.setUser(this.state.username);
+                            this.setState({ loading: true })
+                        }
+                        else {
+                            //display something because of an error
                         }
                     })
-                        .then(resp => {
-                            if (resp.ok) {
-                                this.props.setUser(this.state.username);
-                            }
-                            else {
-                            }
-                        })
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-                return false;
             }
             else {
                 console.log("something went wrong getting location probably");
@@ -54,8 +54,9 @@ class Home extends React.Component {
         });
     }
 
-    oldUser = (event) => {
+    oldUser = event => {
         event.preventDefault();
+        this.setState({ loading: true })
         this.props.getLocation((loc) => {
             if (loc) {
                 const url = "/api/login";
@@ -64,26 +65,22 @@ class Home extends React.Component {
                     "password": this.state.password,
                     "location": `${loc.latitude}, ${loc.longitude}`
                 }
-                try {
-                    fetch(url, {
-                        method: 'PUT', // or 'PUT'
-                        body: JSON.stringify(data), // data can be `string` or {object}!
-                        headers: {
-                            'Content-Type': 'application/json'
+                fetch(url, {
+                    method: 'PUT', // or 'PUT'
+                    body: JSON.stringify(data), // data can be `string` or {object}!
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(resp => {
+                        if (resp.ok) {
+                            this.props.setUser(this.state.username);
+                            this.setState({ loading: false });
+                        }
+                        else {
+                            console.log(`there was an issue logging in `);
                         }
                     })
-                        .then(resp => {
-                            if (resp.ok) {
-                                this.props.setUser(this.state.username);
-                            }
-                            else {
-                                console.log(`there was an issue logging in `);
-                            }
-                        })
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-                return false;
             }
             else {
                 console.log("something went wrong getting location probably");
@@ -105,21 +102,23 @@ class Home extends React.Component {
     }
 
     formRender = () => {
-         return (
-         <Form
-            type={this.state.formType}
-            switchText={this.switchText}
-            submitForm={this.state.formType === "login" ? this.oldUser : this.newUser}
-            handleInputChange={this.handleInputChange}
-            changeFormType={this.changeFormType}
-        ></Form>
-         );
+        return (
+            <Form
+                type={this.state.formType}
+                switchText={this.switchText}
+                submitForm={this.state.formType === "login" ? this.oldUser : this.newUser}
+                handleInputChange={this.handleInputChange}
+                changeFormType={this.changeFormType}
+            >
+            </Form>
+        );
 
     }
 
     render() {
         return (
             <>
+                <Loading visible={this.state.loading} text='locating'/>
                 {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
                 <Bubble />
 
