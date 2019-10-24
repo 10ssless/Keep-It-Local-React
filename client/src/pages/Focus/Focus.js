@@ -24,10 +24,12 @@ class Focus extends React.Component {
     constructor(props){
         super(props);
         this.messageInput = React.createRef();
+        this.messagesInterval = null;
     }
 
     componentDidUpdate(prevProps, prevState) {
         console.log('focus update');
+        clearInterval(this.messagesInterval);
         const { id } = this.props.match.params;
         // only fetch data if a new event is selected - rather than fetch data that is already there
         if (id !== prevProps.match.params.id) {
@@ -37,6 +39,12 @@ class Focus extends React.Component {
                 this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID }, () => {
                     this.fetchMessages(id, messages => {
                         this.setState({ messages: messages });
+                        this.messagesInterval = setInterval(() => {
+                            this.fetchMessages(id, messages => {
+                                this.setState({ messages: messages });
+                                console.log('checking for messages');
+                            })
+                        }, 5000);
                     })
                 });
             })
@@ -45,6 +53,7 @@ class Focus extends React.Component {
 
     componentDidMount() {
         console.log('focus mount');
+        clearInterval(this.messagesInterval);
         const { id } = this.props.match.params;
         console.log()
         this.fetchInformation(id, (data)=> {
@@ -53,10 +62,20 @@ class Focus extends React.Component {
             this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID }, () => {
                 this.fetchMessages(id, (messages) => {
                     this.setState({ messages: messages });
+                    this.messagesInterval = setInterval(() => {
+                        this.fetchMessages(id, messages => {
+                            this.setState({ messages: messages });
+                            console.log('checking for messages');
+                        })
+                    }, 5000);
                 })
             });
         })
     }
+
+    componentWillUnmount() {
+        clearInterval(this.messagesInterval);
+        }
 
     fetchInformation = (id, cb) => {
         fetch(`/api/event/${id}`, {
