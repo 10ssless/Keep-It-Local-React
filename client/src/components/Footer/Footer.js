@@ -17,10 +17,14 @@ function Footer(props) {
     console.log(props);
     return (
         <footer className="footer">
-            {props.loggedIn ? <button id="refer-link" onClick={props.toggleReferal}>REFER A FRIEND</button> : null}
+            
+            {props.loggedIn ? <button id="refer-link" onClick={props.toggleReferral}>REFER A FRIEND</button> : null}
+            
             KEEP IT LOCAL®
-            {props.loggedIn ? <span id="logout" onClick={props.logout}>LOGOUT</span> : null}
-            <div id="refer-box" onClick={props.toggleReferal} style={props.referal ? { "display": "block" } : { "display": "none" }}>
+
+            {props.loggedIn ? <span id="logout-link" onClick={props.logout}>LOGOUT</span> : null}
+
+            <div id="refer-box" onClick={props.toggleReferral} style={props.referral ? { "display": "block" } : { "display": "none" }}>
                 <p>{text}</p>
                 {codes.map(code => {
                     return (
@@ -28,9 +32,9 @@ function Footer(props) {
                             {code}
                         </p>
                     );
-                })
-                }
+                })}
             </div>
+
         </footer>
     )
 }
@@ -38,7 +42,7 @@ function Footer(props) {
 Footer.defaultProps = {
     status: 0,
     codes: [],
-    status: 'old'
+    status: 'new'
 }
 
 export default Footer;

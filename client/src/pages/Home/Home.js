@@ -118,9 +118,9 @@ class Home extends React.Component {
     render() {
         return (
             <>
-                <Loading visible={this.state.loading} text='locating'/>
+                <Loading visible={this.state.loading} text='locating events near you...'/>
                 {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
-                <Bubble />
+                <Bubble loggedIn={this.props.loggedIn} focus={null}/>
 
 
                 {/* MAKE COMPONENT */}
@@ -135,9 +135,6 @@ class Home extends React.Component {
                     {this.formRender()}
 
                 </div>
-
-                {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
-                <Footer loggedIn={false} />
 
             </>
         )
