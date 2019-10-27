@@ -1,19 +1,52 @@
 import React from "react";
 import { Router, Route, Redirect } from "react-router-dom";
-import Home from "./pages/Home/Home"
-import Events from "./pages/Events/Events"
-import Focus from "./pages/Focus/Focus"
-import Create from "./pages/Create/Create"
+import Home from "./pages/Home/Home";
+import Events from "./pages/Events/Events";
+import Create from "./pages/Create/Create";
 import './App.css';
 import history from './history';
-import Footer from './components/Footer/Footer'
+import Footer from './components/Footer/Footer';
 
 class App extends React.Component {
 
   state = {
     currentUser: "",
     loggedIn: false,
-    referral: false
+    referral: false,
+    referralCodes: [],
+    status: "old"
+  }
+
+  toggleReferral = () => {
+    let toggle = this.state.referral ? false : true;
+    this.getReferralCode(data => {
+      const { status, codes } = data;
+      console.log(codes);
+      this.setState({ referral: toggle, referralCodes: codes, status: status ? "new" : "old"});
+    })
+  }
+
+  getReferralCode = cb => {
+    fetch(`/api/code`, {
+      method: "GET"
+    })
+      .then(data => {
+        console.log(data);
+        return data.json();
+      })
+      .then(data => {
+        cb(data);
+      })
+  }
+
+  setUser = (username) => {
+    this.setState({ currentUser: username, loggedIn: true });
+  }
+
+  getLocation = (cb) => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      cb(position.coords);
+    });
   }
 
   // get active user on initial loading
@@ -37,45 +70,6 @@ class App extends React.Component {
     })
   }
 
-  // show/hide referral box
-  toggleReferral = () => {
-    let toggle = this.state.referral ? false : true;
-    this.setState({ referral: toggle });
-  }
-
-  // set currentUser and loggedIn state
-  setUser = (username) => {
-    this.setState({ currentUser: username, loggedIn: true });
-  }
-
-  // get user's location and send coordinates as a callback argument
-  getLocation = (cb) => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      console.log(position.coords);
-      cb(position.coords);
-    });
-  }
-
-  // log out active user
-  logout = () => {
-    console.log(`logging out`);
-    fetch(`/logout`, {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json'
-    }
-    }).then(resp => {
-      console.log(resp);
-      console.log(`resp.ok === ${resp.ok}`);
-      if(resp.ok){
-        this.setState({currentUser: "", loggedIn: false});
-      }
-      else{
-        console.log('there was an issue logging out');
-      } 
-    })
-  }
-
   // if user is logged in --> render all routes
   // if user is NOT logged in --> only render Home route
   renderRoutes = () => {
@@ -86,8 +80,6 @@ class App extends React.Component {
             return (
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferral={this.toggleReferral} referralState={this.state.referral}
-                getLocation={this.getLocation} currentUser={this.state.currentUser}
                 {...props}
               />
             )
@@ -97,7 +89,6 @@ class App extends React.Component {
             return (
               <Events
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferral={this.toggleReferral} referralState={this.state.referral}
                 {...props}
               />
             )
@@ -106,12 +97,10 @@ class App extends React.Component {
           <Route path="/events/:id" render={(props) => {
             return (
               <>
-              <Events
-                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferral={this.toggleReferral} referralState={this.state.referral}
-                {...props}
-              />
-              <Focus currentUser={this.state.currentUser} {...props}/>
+                <Events
+                  focusing={true} currentUser={this.state.currentUser}
+                  {...props} 
+                />
               </>
             )
           }}
@@ -120,7 +109,6 @@ class App extends React.Component {
             return (
               <Create
                 loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                toggleReferral={this.toggleReferral} referralState={this.state.referral}
                 {...props}
               />
             )
@@ -131,19 +119,35 @@ class App extends React.Component {
     }
     else {
       return (
-        <div className="wrapper">
-          <Route path="/" render={() => {
-            return (
-              <Home
-                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-                setUser={this.setUser} getLocation={this.getLocation}
-              />
-            )
-          }}
-          />
-        </div>
+        <Route exact path="/" render={(props) => {
+          return (
+            <Home
+              loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+              setUser={this.setUser} getLocation={this.getLocation} {...props}
+            />
+          )
+        }}
+        />
       );
     }
+  }
+
+  logout = () => {
+    fetch(`/api/logout`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(resp => {
+      if (resp.ok) {
+        this.setState({ currentUser: "", loggedIn: false }, () => {
+          history.push('/');
+        });
+      }
+      else {
+        console.log('there was an issue logging out');
+      }
+    })
   }
 
   render() {
@@ -155,7 +159,13 @@ class App extends React.Component {
             <Redirect to="/" />
           </Route>
         </Router>
-        <Footer loggedIn={this.state.loggedIn} toggleReferral={this.toggleReferral} logout={this.logout}/>
+        <Footer
+          loggedIn={this.state.loggedIn}
+          referral={this.state.referral}
+          toggleReferral={this.toggleReferral}
+          codes={this.state.referralCodes}
+          logout={this.logout}
+          status={this.state.status} />
       </>
     )
   }

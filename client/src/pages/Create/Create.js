@@ -1,6 +1,5 @@
 import React from "react";
 import Bubble from "./../../components/Bubble/Bubble";
-import Footer from "./../../components/Footer/Footer";
 import './Create.css';
 import history from '../../history';
 
@@ -72,15 +71,6 @@ class Create extends React.Component{
                         </form>
                     </div>
                 </div>
-
-
-
-                <div id="refer-box" onClick={this.props.toggleReferral} style={this.props.referralState ? {"display":"block"} : {"display":"none"} }>
-                    IT WORKED
-                </div>
-
-
-                {/* <Footer loggedIn={this.props.loggedIn} toggleReferral={this.props.toggleReferral}/> */}
             </>
         )
     }

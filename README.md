@@ -14,6 +14,10 @@ This is a remake of the same app we created using JavaScript, JQuery, and Handle
 * RSVP to and leave messages on events
 * Refer your friends
 
+## TODO
+* Add referral code generation to the app
+* Add a system for querying for messages using an interval so the messages are auto-updating
+
 ## Generating Referal Codes
 
 In order to be able to be apart of the Keep It Local network, you must first be invited by a current users's Referal Code. Once you have created your own profile, you will be given your own Referal Code that will change every 3 days.

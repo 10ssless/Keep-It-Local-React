@@ -4,13 +4,14 @@ import Bubble from "./../../components/Bubble/Bubble";
 import './Events.css';
 import Moment from "react-moment"
 import 'moment-timezone';
+import Focus from "../Focus/Focus"
 
 class Events extends React.Component {
 
     state = {
         data: null,
         fetching: false,
-        focusing: null
+        focusing: false
     }
 
     // on mount, load events into state 
@@ -35,7 +36,7 @@ class Events extends React.Component {
 
     // helper function to fetch events from database
     getEvents = (cb) => {
-        const url = "/api/events";
+        const url = '/api/events';
         this.setState({ fetching: true }); //can be used to display some loading animation or something because the loading process can take a little while
         try {
             fetch(url, {
@@ -65,6 +66,7 @@ class Events extends React.Component {
     }
 
     componentDidMount() {
+        console.log('mounting');
         const focusing = !!this.props.match.params.id;
         this.getEvents((data) => {
             if (data) {
@@ -79,6 +81,10 @@ class Events extends React.Component {
     renderEvents = (data) => {
         if (data) {
             return data.map(item => {
+                console.log(data);
+                // const dateRaw = item.date.split('-');
+                // const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                // data.date = date;
                 return (
                     <tr key={item.id} className="listing-row" data-id={item.id}>
                         <td><Link to={`/events/${item.id}`} className="listing-item-name">{item.name}</Link></td>
@@ -105,9 +111,8 @@ class Events extends React.Component {
         console.log(this.state.focusing)
         return (
             <>
-
-                {/* {!!this.state.focusing ? "" : <Bubble />} */}
                 <Bubble loggedIn={this.props.loggedIn} focus={this.state.focusing}/>
+                {!!this.state.focusing ? <Focus updateEvents={this.updateEvents} {...this.props}/> : null}
                 <div id="dark-panel">
                     <div className="listings">
 
@@ -161,15 +166,13 @@ class Events extends React.Component {
                         </div>
                     </div>
                 </div>
-
-
-
-                <div id="refer-box" onClick={this.props.toggleReferral} style={this.props.referralState ? { "display": "block" } : { "display": "none" }}>
-                    IT WORKED
-                </div>
             </>
         )
     }
+}
+
+Events.defaultProps = {
+    focusing: false
 }
 
 

@@ -24,12 +24,20 @@ class Focus extends React.Component {
         newDescription: null
     }
 
+    constructor(props){
+        super(props);
+        this.messageInput = React.createRef();
+    }
+
     componentDidUpdate(prevProps, prevState) {
+        console.log('focus update');
         const { id } = this.props.match.params;
         // only fetch data if a new event is selected - rather than fetch data that is already there
         if (id !== prevProps.match.params.id) {
             this.fetchInformation(id, data => {
-                this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: data.date, creatorID: data.creatorID }, () => {
+                const dateRaw = data.date.split('-');
+                const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID }, () => {
                     this.fetchMessages(id, messages => {
                         this.setState({ messages: messages });
                     })
@@ -39,9 +47,13 @@ class Focus extends React.Component {
     }
 
     componentDidMount() {
+        console.log('focus mount');
         const { id } = this.props.match.params;
+        console.log()
         this.fetchInformation(id, (data)=> {
-            this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: data.date, creatorID: data.creatorID }, () => {
+            const dateRaw = data.date.split('-');
+            const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+            this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID }, () => {
                 this.fetchMessages(id, (messages) => {
                     this.setState({ messages: messages });
                 })
@@ -77,6 +89,7 @@ class Focus extends React.Component {
                 'Content-Type': 'application/json'
             }
         }).then((resp) => {
+            console.log(resp);
             if (resp.ok) {
                 return resp.json();
             }
@@ -121,13 +134,18 @@ class Focus extends React.Component {
             return (
                 this.state.messages.map(item => {
                     let dateTime = item.createdAt;
-                    dateTime = dateTime.split(', ');
-                    const date = dateTime[0];
-                    const time = dateTime[1];
+                    dateTime = dateTime.split('T');
+                    const dateDash = dateTime[0];
+                    const dateList = dateDash.split('-');
+                    const date = `${dateList[1]}/${dateList[2]}/${dateList[0]}`
+                    const timeList = dateTime[1].split(':');
+                    const time = `${timeList[0]}:${timeList[1]}`;
                     return (
                         <li>
-                            <span className="msg-date"><Moment format="MMMM D, YYYY">{date}</Moment></span>
-                            <span className="msg-time"><Moment format="MM:ss A" tz="America/New_York">{time}</Moment></span>
+                            <span className="msg-date"><Moment parse="MM/DD/YYYY" format="MMMM D, YYYY">{date}</Moment></span>
+                            {/* <span className="msg-date">{date}</span> */}
+                            <span className="msg-time"><Moment parse="HH:mm" format="h:MM A" tz="America/New_York">{time}</Moment></span>
+                            {/* <span className="msg-time">{time}</span> */}
                             <span className="msg-user">{item.creatorID}</span>
                             {item.content}
                         </li>
@@ -139,12 +157,17 @@ class Focus extends React.Component {
 
     makeRSVP = (event) => {
         event.preventDefault();
+        const { id } = this.props.match.params;
         fetch(`/api/rsvp`, {
-            method: "GET",
+            method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({
+                event_id: id
+            })
         }).then((resp) => {
+            console.log(resp);
             if (resp.ok) {
                 return resp.json();
             }
@@ -154,7 +177,9 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                this.setState({ numRSVP: this.state.numRSVP + 1 });
+                const dateRaw = data.date.split('-');
+                const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                this.setState({eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID});
             }
         })
     }
@@ -166,7 +191,9 @@ class Focus extends React.Component {
             this.fetchUpdateEvent(id, (resp) => {
                 const descr = this.state.newDescription;
                 const name = this.state.newName;
-                this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null });
+                this.setState({ editing: false, eventName: name, description: descr, newName: null, newDescription: null }, () => {
+                    this.props.updateEvents();
+                });
             });
         }
         else {
@@ -180,6 +207,7 @@ class Focus extends React.Component {
 
     submitMessage = () => {
         const { id } = this.props.match.params;
+        console.log(`this.submitMessage id=${id}`);
         fetch(`/api/message`, {
             method: "POST",
             headers: {
@@ -191,8 +219,9 @@ class Focus extends React.Component {
             })
         }).then(resp => {
             if (resp.ok) {
-                this.fetchMessages(data => {
-                    this.setState({ messages: data });
+                this.fetchMessages(id, data => {
+                    this.messageInput.current.value = "";
+                    this.setState({ messages: data, newMessage: "" });
                 })
             }
             else {
@@ -237,7 +266,7 @@ class Focus extends React.Component {
                         <ul id="messages-list">
                             {this.renderMessages()}
                         </ul>
-                        <input type="text" id="new-msg" placeholder="new message" name="newMessage" onChange={event => this.onTextChange(event)} />
+                        <input ref={this.messageInput} type="text" id="new-msg" placeholder="new message" name="newMessage" onChange={event => this.onTextChange(event)} />
                         <button type="button" className="msg-btn" onClick={this.submitMessage}>post</button>
                     </div>
                 </div>

@@ -1,0 +1,25 @@
+#spinner-container{
+    z-index: 1000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#spinner{
+    margin: auto;
+    text-align: center;
+    margin: auto;
+}
+
+#loading-text{
+    font-size: 24px;
+}
+
+#spinner-background{
+    background: rgba(0, 0, 0, 0.64);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 1000;
+}
