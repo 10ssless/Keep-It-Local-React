@@ -3,6 +3,7 @@ const session = require("express-session");
 const bodyParser = require('body-parser');
 const routes = require("./routes/api-routes.js");
 const passport = require("./config/passport");
+const path = require('path');
 
 // Setting up port and requiring models for syncing
 const PORT = process.env.PORT || 9000;
@@ -35,7 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(__dirname + "client/build"));
+    app.use(express.static(path.join(__dirname, 'client/build')));
 }
 else{
   app.use(express.static(__dirname + '/client/public'));

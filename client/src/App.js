@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Route, Redirect } from "react-router-dom";
+import { Router, Route, Redirect, Switch } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Events from "./pages/Events/Events";
 import Create from "./pages/Create/Create";
@@ -18,15 +18,15 @@ class App extends React.Component {
   }
 
   toggleReferral = () => {
-    if (this.state.referral){
-      this.setState({referral:false})
+    if (this.state.referral) {
+      this.setState({ referral: false })
     } else {
       this.getReferralCode(data => {
         const { status, codes } = data;
         console.log(codes);
-        this.setState({ 
-          referral: true, 
-          referralCodes: codes, 
+        this.setState({
+          referral: true,
+          referralCodes: codes,
           status: status ? "new" : "old"
         });
       })
@@ -47,9 +47,9 @@ class App extends React.Component {
   }
 
   setUser = (username) => {
-    this.setState({ 
-      currentUser: username, 
-      loggedIn: true 
+    this.setState({
+      currentUser: username,
+      loggedIn: true
     });
   }
 
@@ -107,9 +107,10 @@ class App extends React.Component {
           <Route path="/events/:id" render={(props) => {
             return (
               <>
+                {console.log('hit route')}
                 <Events
                   focusing={true} currentUser={this.state.currentUser}
-                  {...props} 
+                  {...props}
                 />
               </>
             )
@@ -124,17 +125,22 @@ class App extends React.Component {
             )
           }}
           />
-        </div>
+        </div >
       );
     }
     else {
       return (
         <Route exact path="/" render={(props) => {
           return (
-            <Home
-              loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
-              setUser={this.setUser} getLocation={this.getLocation} {...props}
-            />
+            <>
+              <Home
+                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
+                setUser={this.setUser} getLocation={this.getLocation} {...props}
+              />
+              < Route path="*" >
+                <Redirect to="/" />
+              </Route >
+            </>
           )
         }}
         />
@@ -150,11 +156,11 @@ class App extends React.Component {
       }
     }).then(resp => {
       if (resp.ok) {
-        this.setState({ 
-            currentUser: "", 
-            loggedIn: false,
-            referral: false
-          }, () => {
+        this.setState({
+          currentUser: "",
+          loggedIn: false,
+          referral: false
+        }, () => {
           history.push('/');
         });
       }
@@ -168,10 +174,9 @@ class App extends React.Component {
     return (
       <>
         <Router history={history}>
-          {this.renderRoutes()}
-          <Route path="*" >
-            <Redirect to="/" />
-          </Route>
+          <Switch>
+            {this.renderRoutes()}
+          </Switch>
         </Router>
         <Footer
           loggedIn={this.state.loggedIn}
