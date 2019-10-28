@@ -12,7 +12,7 @@ class Home extends React.Component {
         username: "",
         password: "",
         referralCode: "",
-        loading: false
+        loading: false,
     }
 
     componentDidMount() {
@@ -40,11 +40,11 @@ class Home extends React.Component {
                     .then(resp => {
                         if (resp.ok) {
                             this.props.setUser(this.state.username);
-                            this.setState({ loading: true })
                         }
                         else {
                             //display something because of an error
                         }
+                        this.setState({ loading: true })
                     })
             }
             else {
@@ -75,11 +75,11 @@ class Home extends React.Component {
                     .then(resp => {
                         if (resp.ok) {
                             this.props.setUser(this.state.username);
-                            this.setState({ loading: false });
                         }
                         else {
                             console.log(`there was an issue logging in `);
                         }
+                        this.setState({ loading: false });
                     })
             }
             else {

@@ -7,20 +7,18 @@ export default function Loading(props) {
     console.log(visible);
     console.log(visible ? 'visible' : 'none');
     return (
-        // <div class="d-flex flex-column align-items-center justify-content-center"
-        <div id="spinner-background" style={{visibility : visible ? 'visible' : 'hidden'}}>
+        <div id="spinner-background" style={{ visibility: visible ? 'visible' : 'hidden' }}>
             <div id="spinner-container" class="text-center">
-                <div class="text-center">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading</span>
+                <div className="text-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">locating events near you...</span>
                     </div>
                 </div>
-                <div class="text-center" id="loading-text">
+                <div className="text-center" id="loading-text">
                     <strong>{text}</strong>
                 </div>
             </div>
         </div>
-        // </div>
     )
 }
 
