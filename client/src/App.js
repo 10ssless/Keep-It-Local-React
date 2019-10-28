@@ -18,16 +18,19 @@ class App extends React.Component {
   }
 
   toggleReferral = () => {
-    let toggle = this.state.referral ? false : true;
-    this.getReferralCode(data => {
-      const { status, codes } = data;
-      console.log(codes);
-      this.setState({ 
-        referral: toggle, 
-        referralCodes: codes, 
-        status: status ? "new" : "old"
-      });
-    })
+    if (this.state.referral){
+      this.setState({referral:false})
+    } else {
+      this.getReferralCode(data => {
+        const { status, codes } = data;
+        console.log(codes);
+        this.setState({ 
+          referral: true, 
+          referralCodes: codes, 
+          status: status ? "new" : "old"
+        });
+      })
+    }
   }
 
   getReferralCode = cb => {
