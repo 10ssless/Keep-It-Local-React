@@ -3,10 +3,10 @@ import './Footer.css';
 
 const config = {
     old: {
-        text: "HERE ARE YOUR EXISTING CODES:"
+        text: "Here are your active Referral Codes:"
     },
     new: {
-        text: "HERE IS YOUR NEW CODE:"
+        text: "New members must wait 3 days before generating Referral Codes."
     }
 }
 
@@ -24,14 +24,13 @@ function Footer(props) {
 
             {props.loggedIn ? <span id="logout-link" onClick={props.logout}>LOGOUT</span> : null}
 
-            <div id="refer-box" onClick={props.toggleReferral} style={props.referral ? { "display": "block" } : { "display": "none" }}>
+            <div id="refer-box" onDoubleClick={props.toggleReferral} style={props.referral ? { "display": "block" } : { "display": "none" }}>
                 <p>{text}</p>
                 {codes.map(code => {
                     return (
-                        <p key={code}>
+                        <p key={code} className="referral-code">
                             {code}
-                        </p>
-                    );
+                        </p>);
                 })}
             </div>
 

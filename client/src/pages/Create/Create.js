@@ -54,19 +54,19 @@ class Create extends React.Component{
                     <br/><br/><br/>
                     <div class="create">
                         <form id="create-form" onSubmit={event => this.createEvent(event)}>
-                            <label>name of event</label>
-                            <input type="text" name="name" placeholder="Event Name" onChange={event => this.handleChange(event)} required/>
+                            <label for="name" >name of event</label>
+                            <input type="text" id="eventName" name="name" placeholder="Event Name" onChange={event => this.handleChange(event)} required/>
 
-                            <label>date of event</label>
+                            <label for="eventDate">date of event</label>
                             <input type="date" id="eventDate" name="date" onChange={event => this.handleChange(event)} required/>
 
-                            <label>category</label>
+                            <label for="category">category</label>
                             <input type="text" id="category" name="category" placeholder="Comedy, Music, Party, etc." onChange={event => this.handleChange(event)} required/>
 
-                            <label>location</label>
+                            <label for="location">location</label>
                             <input type="text" id="location" name="location" placeholder="### adddress st, city, state" onChange={event => this.handleChange(event)} required/>
 
-                            <label>description</label>
+                            <label for="description">description</label>
                             <textarea id="details" name="description" placeholder="start time, dress code, byob, etc. " onChange={event => this.handleChange(event)} wrap="hard"></textarea>
 
                             <button type="submit" id="create-btn" onClick={event => this.createEvent(event)}>create event</button>
