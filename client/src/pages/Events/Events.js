@@ -65,18 +65,18 @@ class Events extends React.Component {
         }
     }
 
-    componentDidMount() {
-        console.log('mounting');
-        const focusing = !!this.props.match.params.id;
-        this.getEvents((data) => {
-            if (data) {
-                this.setState({ data: data, focusing: focusing });
-            }
-            else {
-                console.log("something went wrong");
-            }
-        });
-    }
+    // componentDidMount() {
+    //     console.log('mounting');
+    //     const focusing = !!this.props.match.params.id;
+    //     this.getEvents((data) => {
+    //         if (data) {
+    //             this.setState({ data: data, focusing: focusing });
+    //         }
+    //         else {
+    //             console.log("something went wrong");
+    //         }
+    //     });
+    // }
 
     renderEvents = (data) => {
         if (data) {

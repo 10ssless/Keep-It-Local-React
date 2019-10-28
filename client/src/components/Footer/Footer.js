@@ -40,7 +40,7 @@ function Footer(props) {
 }
 
 Footer.defaultProps = {
-    status: 0,
+    // status: 0,
     codes: [],
     status: 'new'
 }
