@@ -1,6 +1,6 @@
 import React from "react";
 import Bubble from "./../../components/Bubble/Bubble";
-import Footer from "./../../components/Footer/Footer";
+// import Footer from "./../../components/Footer/Footer";
 import Form from "./../../components/Form/Form";
 import './Home.css';
 import Loading from "./../../components/Loading/Loading.js";
