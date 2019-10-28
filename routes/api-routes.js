@@ -10,10 +10,10 @@ const NodeGeocoder = require('node-geocoder');
 const turf = require('@turf/turf');
 require('dotenv').config()
 
-if(process.env.REDIS_URL){
+if (process.env.REDIS_URL) {
   var redis = require('redis').createClient(process.env.REDIS_URL);
 }
-else{
+else {
   var redis = require('redis').createClient(6379, 'localhost');
 }
 
@@ -222,7 +222,7 @@ router.get("/api/code", function (req, res) {
         res.json({
           status: 1,
           codes: [resp.code]
-          });
+        });
       });
     }
     // Checks the lastReferral with current time. Edit the int to set the amount of days
@@ -385,7 +385,9 @@ router.post("/api/event", function (req, res) {
     let now = moment().format('YYYY-MM-DD');
     let eventDate = req.body.date;
     let future = compareDashedDates(now, eventDate);
+    console.log(future);
     if (!future) {
+      console.log('not in future');     
       res.statusMessage = "Invalid Date";
       res.status(400).end();
       return;
@@ -405,17 +407,19 @@ router.post("/api/event", function (req, res) {
         upVotes: 0
       }).then(function (resp) {
         eventID = resp.dataValues.id;
+        console.log(resp.dataValues.id);
       }).then(function () {
         //create a new table with name Messages_<eventname>
-        connection.query(`CREATE TABLE Messages_${eventID}
-          (
+        connection.query(`CREATE TABLE Messages_${eventID}(
             id INTEGER(10) AUTO_INCREMENT PRIMARY KEY,
             content VARCHAR(255) NOT NULL,
             creatorID VARCHAR(255) NOT NULL,
             createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
-            )`, function (err, resp) {
-          res.end();
-        });
+            );`,
+          function (err, resp) {
+            if(err) throw err.stack;
+            res.end();
+          });
 
       }).catch(function (err) {
         console.log(err);
@@ -440,8 +444,10 @@ router.post("/api/message", function (req, res) {
 router.get("/api/messages/:id", function (req, res) {
   //get all messages from a certain event
   let event_id = req.params.id;
+  console.log(`SELECT * FROM Messages_${event_id} ORDER BY id ASC`);
   // ============= mysql method =======================
   connection.query(`SELECT * FROM Messages_${event_id} ORDER BY id ASC`, function (err, result) {
+    console.log(err);
     if (err) throw err.stack;
     console.table(result);
     let msgs_time = {

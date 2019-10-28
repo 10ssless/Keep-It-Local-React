@@ -6,6 +6,7 @@ import Create from "./pages/Create/Create";
 import './App.css';
 import history from './history';
 import Footer from './components/Footer/Footer';
+import AuthenticationAlert from "../src/components/Alert/Alert.js"
 
 class App extends React.Component {
 
@@ -14,7 +15,9 @@ class App extends React.Component {
     loggedIn: false,
     referral: false,
     referralCodes: [],
-    status: "old"
+    status: "old",
+    error: false,
+    success: false
   }
 
   toggleReferral = () => {
@@ -22,7 +25,7 @@ class App extends React.Component {
     this.getReferralCode(data => {
       const { status, codes } = data;
       console.log(codes);
-      this.setState({ referral: toggle, referralCodes: codes, status: status ? "new" : "old"});
+      this.setState({ referral: toggle, referralCodes: codes, status: status ? "new" : "old" });
     })
   }
 
@@ -40,13 +43,42 @@ class App extends React.Component {
   }
 
   setUser = (username) => {
-    this.setState({ currentUser: username, loggedIn: true });
+    this.setState({ currentUser: username, loggedIn: true, success: true });
   }
 
   getLocation = (cb) => {
     navigator.geolocation.getCurrentPosition(function (position) {
       cb(position.coords);
     });
+  }
+
+  setError = () => {
+    this.setState({ error: true });
+  }
+
+  renderAlert = () => {
+    const { success, error } = this.state;
+    if (success || error) {
+      if (success) {
+        return (
+          <AuthenticationAlert
+            type="success"
+            closeAlert={this.closeAlert}
+          />
+        );
+      }
+      else {
+        return (
+          <AuthenticationAlert
+            type="danger"
+            closeAlert={this.closeAlert}
+          />);
+      }
+    }
+  }
+
+  closeAlert = () => {
+    this.setState({ success: false, error: false })
   }
 
   // get active user on initial loading
@@ -99,7 +131,7 @@ class App extends React.Component {
               <>
                 <Events
                   focusing={true} currentUser={this.state.currentUser}
-                  {...props} 
+                  {...props}
                 />
               </>
             )
@@ -124,6 +156,7 @@ class App extends React.Component {
             <Home
               loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
               setUser={this.setUser} getLocation={this.getLocation} {...props}
+              setError={this.setError}
             />
           )
         }}
@@ -159,6 +192,7 @@ class App extends React.Component {
             <Redirect to="/" />
           </Route>
         </Router>
+        {this.renderAlert()}
         <Footer
           loggedIn={this.state.loggedIn}
           referral={this.state.referral}
