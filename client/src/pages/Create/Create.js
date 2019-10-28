@@ -44,12 +44,14 @@ class Create extends React.Component{
     render(){
         return(
             <>
-                <Bubble/>
+                <Bubble loggedIn={this.props.loggedIn} focus={null}/>
 
                 <div id="dark-panel">
+                    <br/><br/><br/>
                     <div id="quote">
                         <h1>create a new event.</h1>
                     </div>
+                    <br/><br/><br/>
                     <div class="create">
                         <form id="create-form" onSubmit={event => this.createEvent(event)}>
                             <label>name of event</label>

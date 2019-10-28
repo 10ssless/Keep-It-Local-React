@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Bubble from "./../../components/Bubble/Bubble";
 import './Events.css';
+import Moment from "react-moment"
+import 'moment-timezone';
 import Focus from "../Focus/Focus"
 
 class Events extends React.Component {
@@ -12,6 +14,27 @@ class Events extends React.Component {
         focusing: false
     }
 
+    // on mount, load events into state 
+    componentDidMount() {
+        console.log(!!this.props.match.params.id);
+        const focusing = !!this.props.match.params.id;
+        this.getEvents((data) => {
+            console.log(data);
+            if (data) {
+                this.setState({ 
+                    data: data, 
+                    focusing: focusing 
+                }, () => {
+                    console.log(this.state.data);
+                })
+            }
+            else {
+                console.log("something went wrong");
+            }
+        });
+    }
+
+    // helper function to fetch events from database
     getEvents = (cb) => {
         const url = '/api/events';
         this.setState({ fetching: true }); //can be used to display some loading animation or something because the loading process can take a little while
@@ -42,30 +65,30 @@ class Events extends React.Component {
         }
     }
 
-    componentDidMount() {
-        console.log('mounting');
-        const focusing = !!this.props.match.params.id;
-        this.getEvents((data) => {
-            if (data) {
-                this.setState({ data: data, focusing: focusing });
-            }
-            else {
-                console.log("something went wrong");
-            }
-        });
-    }
+    // componentDidMount() {
+    //     console.log('mounting');
+    //     const focusing = !!this.props.match.params.id;
+    //     this.getEvents((data) => {
+    //         if (data) {
+    //             this.setState({ data: data, focusing: focusing });
+    //         }
+    //         else {
+    //             console.log("something went wrong");
+    //         }
+    //     });
+    // }
 
     renderEvents = (data) => {
         if (data) {
             return data.map(item => {
                 console.log(data);
-                const dateRaw = item.date.split('-');
-                const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
-                data.date = date;
+                // const dateRaw = item.date.split('-');
+                // const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                // data.date = date;
                 return (
                     <tr key={item.id} className="listing-row" data-id={item.id}>
                         <td><Link to={`/events/${item.id}`} className="listing-item-name">{item.name}</Link></td>
-                        <td><span className="listing-item listing-item-date">{date}</span></td>
+                        <td><span className="listing-item listing-item-date"><Moment parse="YYYY-MM-DD" format="MM/DD/YY">{item.date}</Moment></span></td>
                         <td><span className="listing-item listing-item-cat">{item.category}</span></td>
                         <td><span className="listing-item listing-item-local">{item.distance} mi</span></td>
                         <td><span className="listing-item listing-item-votes">{item.upVotes}</span></td>
@@ -76,6 +99,7 @@ class Events extends React.Component {
         }
     }
     
+    // call getEvents again to update event listings
     updateEvents = (cb) => {
         this.getEvents(data => {
             this.setState({data: data}, cb);
@@ -83,9 +107,12 @@ class Events extends React.Component {
     }
 
     render() {
+        console.log("this.state.focusing")
+        console.log(this.state.focusing)
         return (
             <>
-                {!!this.state.focusing ? <Focus updateEvents={this.updateEvents} {...this.props}/> : <Bubble />}
+                <Bubble loggedIn={this.props.loggedIn} focus={this.state.focusing}/>
+                {!!this.state.focusing ? <Focus updateEvents={this.updateEvents} {...this.props}/> : null}
                 <div id="dark-panel">
                     <div className="listings">
 

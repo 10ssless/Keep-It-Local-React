@@ -11,7 +11,7 @@
   font-size:18px;
 }
 
-#logout {
+#logout-link {
   position: absolute;
   right: 10px;
   color: black;

@@ -12,17 +12,17 @@ class App extends React.Component {
   state = {
     currentUser: "",
     loggedIn: false,
-    referal: false,
-    referalCodes: [],
+    referral: false,
+    referralCodes: [],
     status: "old"
   }
 
-  toggleReferal = () => {
-    let toggle = this.state.referal ? false : true;
+  toggleReferral = () => {
+    let toggle = this.state.referral ? false : true;
     this.getReferralCode(data => {
       const { status, codes } = data;
       console.log(codes);
-      this.setState({ referal: toggle, referalCodes: codes, status: status ? "new" : "old"});
+      this.setState({ referral: toggle, referralCodes: codes, status: status ? "new" : "old"});
     })
   }
 
@@ -49,6 +49,7 @@ class App extends React.Component {
     });
   }
 
+  // get active user on initial loading
   componentDidMount() {
     fetch('/currentUser', {
       method: "GET",
@@ -69,6 +70,8 @@ class App extends React.Component {
     })
   }
 
+  // if user is logged in --> render all routes
+  // if user is NOT logged in --> only render Home route
   renderRoutes = () => {
     if (this.state.loggedIn) {
       return (
@@ -76,6 +79,7 @@ class App extends React.Component {
           <Route exact path="/" render={(props) => {
             return (
               <Events
+                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 {...props}
               />
             )
@@ -84,6 +88,7 @@ class App extends React.Component {
           <Route exact path="/events" render={(props) => {
             return (
               <Events
+                loggedIn={this.state.loggedIn} currentUser={this.state.currentUser}
                 {...props}
               />
             )
@@ -93,8 +98,8 @@ class App extends React.Component {
             return (
               <>
                 <Events
-                  {...props} focusing={true}
-                  currentUser={this.state.currentUser}
+                  focusing={true} currentUser={this.state.currentUser}
+                  {...props} 
                 />
               </>
             )
@@ -156,9 +161,9 @@ class App extends React.Component {
         </Router>
         <Footer
           loggedIn={this.state.loggedIn}
-          referal={this.state.referal}
-          toggleReferal={this.toggleReferal}
-          codes={this.state.referalCodes}
+          referral={this.state.referral}
+          toggleReferral={this.toggleReferral}
+          codes={this.state.referralCodes}
           logout={this.logout}
           status={this.state.status} />
       </>

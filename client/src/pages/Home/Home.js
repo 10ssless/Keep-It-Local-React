@@ -1,6 +1,6 @@
 import React from "react";
 import Bubble from "./../../components/Bubble/Bubble";
-import Footer from "./../../components/Footer/Footer";
+// import Footer from "./../../components/Footer/Footer";
 import Form from "./../../components/Form/Form";
 import './Home.css';
 import Loading from "./../../components/Loading/Loading.js";
@@ -75,11 +75,11 @@ class Home extends React.Component {
                     .then(resp => {
                         if (resp.ok) {
                             this.props.setUser(this.state.username);
-                            this.setState({ loading: false });
                         }
                         else {
                             console.log(`there was an issue logging in `);
                         }
+                        this.setState({ loading: false });
                     })
             }
             else {
@@ -118,9 +118,9 @@ class Home extends React.Component {
     render() {
         return (
             <>
-                <Loading visible={this.state.loading} text='locating'/>
+                <Loading visible={this.state.loading} text='locating events near you...'/>
                 {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
-                <Bubble />
+                <Bubble loggedIn={this.props.loggedIn} focus={null}/>
 
 
                 {/* MAKE COMPONENT */}
@@ -135,9 +135,6 @@ class Home extends React.Component {
                     {this.formRender()}
 
                 </div>
-
-                {/* NEEDS PROPS FOR CONDITIONAL RENDER */}
-                <Footer loggedIn={false} />
 
             </>
         )
