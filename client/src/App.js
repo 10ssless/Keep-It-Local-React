@@ -22,7 +22,11 @@ class App extends React.Component {
     this.getReferralCode(data => {
       const { status, codes } = data;
       console.log(codes);
-      this.setState({ referral: toggle, referralCodes: codes, status: status ? "new" : "old"});
+      this.setState({ 
+        referral: toggle, 
+        referralCodes: codes, 
+        status: status ? "new" : "old"
+      });
     })
   }
 
@@ -40,7 +44,10 @@ class App extends React.Component {
   }
 
   setUser = (username) => {
-    this.setState({ currentUser: username, loggedIn: true });
+    this.setState({ 
+      currentUser: username, 
+      loggedIn: true 
+    });
   }
 
   getLocation = (cb) => {
@@ -140,7 +147,11 @@ class App extends React.Component {
       }
     }).then(resp => {
       if (resp.ok) {
-        this.setState({ currentUser: "", loggedIn: false }, () => {
+        this.setState({ 
+            currentUser: "", 
+            loggedIn: false,
+            referral: false
+          }, () => {
           history.push('/');
         });
       }
