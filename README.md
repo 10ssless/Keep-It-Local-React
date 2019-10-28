@@ -6,7 +6,7 @@ This is a remake of the same app we created using JavaScript, JQuery, and Handle
 
 ## Preview
 
-![Preview Photo](public/images/keep-it-local.png)
+![Preview Photo](client/public/keep-it-local.png)
 
 ## Features
 
