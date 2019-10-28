@@ -36,7 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, 'client/build')));
+    app.use(express.static(path.join(__dirname, '/client/build')));
 }
 else{
   app.use(express.static(__dirname + '/client/public'));

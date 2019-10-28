@@ -10,10 +10,10 @@ const NodeGeocoder = require('node-geocoder');
 const turf = require('@turf/turf');
 require('dotenv').config()
 
-if(process.env.REDIS_URL){
+if (process.env.REDIS_URL) {
   var redis = require('redis').createClient(process.env.REDIS_URL);
 }
-else{
+else {
   var redis = require('redis').createClient(6379, 'localhost');
 }
 
@@ -224,32 +224,32 @@ router.get("/api/code", function (req, res) {
         console.log("You're not eligible for a new code")
         res.redirect(307, "/api/allcodes");
       } else {
-          console.log("You're eligible for a new code")
-          // Route used to post a referral code on click
-          db.ReferralCodes.create({
-            creatorID: req.user.userName,
-            // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
-            code: voucher_codes.generate({
-              length: 8,
-              count: 5
-            })[0]
-          }).then(newCodeResp => {
-            console.log("new code created");
-            console.log(newCodeResp);
-            // res.redirect(307, "/api/allcodes");
-          }).then(() => {
-            db.User.update({
-                lastReferral: moment.utc().format('YYYY-MM-DD HH:mm:ss')
-              }, {
-              where: {
-                userName: req.user.userName
-              }
-            })
-          }).then(userUpdate => {
-            console.log("lastReferral date updated");
-            console.log(userUpdate);
-            res.redirect(307, "/api/allcodes");
-          });
+        console.log("You're eligible for a new code")
+        // Route used to post a referral code on click
+        db.ReferralCodes.create({
+          creatorID: req.user.userName,
+          // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
+          code: voucher_codes.generate({
+            length: 8,
+            count: 5
+          })[0]
+        }).then(newCodeResp => {
+          console.log("new code created");
+          console.log(newCodeResp);
+          // res.redirect(307, "/api/allcodes");
+        }).then(() => {
+          db.User.update({
+            lastReferral: moment.utc().format('YYYY-MM-DD HH:mm:ss')
+          }, {
+            where: {
+              userName: req.user.userName
+            }
+          })
+        }).then(userUpdate => {
+          console.log("lastReferral date updated");
+          console.log(userUpdate);
+          res.redirect(307, "/api/allcodes");
+        });
       }
     }
     // Checks the lastReferral with current time. Edit the int to set the amount of days
@@ -480,7 +480,12 @@ router.get("/api/messages/:id", function (req, res) {
 });
 
 router.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, "../client/public/index.html"));
+  if (process.env.NODE_ENV === "production") {
+    res.sendFile(path.join(__dirname, "../client/build/index.html"));
+  }
+  else {
+    res.sendFile(path.join(__dirname, "../client/public/index.html"));
+  }
 })
 
 
