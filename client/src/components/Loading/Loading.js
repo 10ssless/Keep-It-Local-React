@@ -11,7 +11,7 @@ export default function Loading(props) {
             <div id="spinner-container" class="text-center">
                 <div className="text-center">
                     <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading</span>
+                        <span className="sr-only">locating events near you...</span>
                     </div>
                 </div>
                 <div className="text-center" id="loading-text">

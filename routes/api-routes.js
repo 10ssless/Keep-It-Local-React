@@ -176,7 +176,7 @@ router.get("/api/allcodes", function (req, res) {
     }
     console.log(mycodes);
     res.json({
-      status: 0,
+      status: 0, // 'old' status
       codes: mycodes
     });
   })
@@ -201,29 +201,56 @@ router.get("/api/code", function (req, res) {
 
     let userStart = new Date(result.createdAt).toISOString();
     userStart = moment(userStart);
+    console.log(``)
+    console.log(`userStart: ${userStart}`)
+    console.log(`lastRef: ${lastRef}`)
+    console.log(`currentTime: ${currentTime}`)
+    console.log(`diff from userStart ${currentTime.diff(userStart, 'days')}`)
+    console.log(`diff from lastRef ${currentTime.diff(lastRef, 'days')}`)
+    console.log(``)
 
-    //change the test to currentTime
-    if (lastRef.diff(currentTime, 'days') < 3) {
-      console.log("You're not eligible for a new code")
-      res.redirect(307, "/api/allcodes");
-    } else {
-      console.log("You're eligible for a new code")
-      // Route used to post a referral code on click
-      db.ReferralCodes.create({
-        creatorID: req.user.userName,
-        // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
-        code: voucher_codes.generate({
-          length: 8,
-          count: 5
-        })[0]
-      }).then(function (resp) {
-        console.log("code created");
-        console.log(resp);
-        res.json({
-          status: 1,
-          codes: [resp.code]
-          });
+
+
+    // Check if user is older than 3 days on the network
+    if (currentTime.diff(userStart, 'days') < 3) {
+      console.log("New users must wait 3 days before getting codes")
+      res.json({
+        status: 1, // 'new' status 
+        codes: []
       });
+    } else {
+      // Check if user is generated a new code in the last 3 days
+      if (currentTime.diff(lastRef, 'days') < 3) {
+        console.log("You're not eligible for a new code")
+        res.redirect(307, "/api/allcodes");
+      } else {
+          console.log("You're eligible for a new code")
+          // Route used to post a referral code on click
+          db.ReferralCodes.create({
+            creatorID: req.user.userName,
+            // Generates an array of 5 random strings with 8 characters in length and selecting the first one.
+            code: voucher_codes.generate({
+              length: 8,
+              count: 5
+            })[0]
+          }).then(newCodeResp => {
+            console.log("new code created");
+            console.log(newCodeResp);
+            // res.redirect(307, "/api/allcodes");
+          }).then(() => {
+            db.User.update({
+                lastReferral: moment.utc().format('YYYY-MM-DD HH:mm:ss')
+              }, {
+              where: {
+                userName: req.user.userName
+              }
+            })
+          }).then(userUpdate => {
+            console.log("lastReferral date updated");
+            console.log(userUpdate);
+            res.redirect(307, "/api/allcodes");
+          });
+      }
     }
     // Checks the lastReferral with current time. Edit the int to set the amount of days
   })
