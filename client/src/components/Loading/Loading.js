@@ -8,7 +8,7 @@ export default function Loading(props) {
     console.log(visible ? 'visible' : 'none');
     return (
         <div id="spinner-background" style={{ visibility: visible ? 'visible' : 'hidden' }}>
-            <div id="spinner-container" class="text-center">
+            <div id="spinner-container" className="text-center">
                 <div className="text-center">
                     <div className="spinner-border" role="status">
                         <span className="sr-only">locating events near you...</span>

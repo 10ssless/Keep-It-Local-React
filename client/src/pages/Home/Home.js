@@ -1,6 +1,5 @@
 import React from "react";
 import Bubble from "./../../components/Bubble/Bubble";
-// import Footer from "./../../components/Footer/Footer";
 import Form from "./../../components/Form/Form";
 import './Home.css';
 import Loading from "./../../components/Loading/Loading.js";
@@ -42,6 +41,7 @@ class Home extends React.Component {
                             this.props.setUser(this.state.username);
                         }
                         else {
+                            this.props.setError();
                             //display something because of an error
                         }
                         this.setState({ loading: true })
@@ -78,6 +78,7 @@ class Home extends React.Component {
                         }
                         else {
                             console.log(`there was an issue logging in `);
+                            this.props.setError();
                         }
                         this.setState({ loading: false });
                     })

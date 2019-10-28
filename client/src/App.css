@@ -22,6 +22,7 @@ input:-webkit-autofill:active {
   top: 20%;
   font-size: 18px;
   width: 40%;
+  color: white;
 }
 
 
@@ -109,6 +110,10 @@ li {
   /* color:rgb(105, 151, 128); */
   color: rgba(186, 243, 208, 0.6);
   letter-spacing: .5px;
+}
+
+.listing-item{
+  color: white;
 }
 
 .listing-item-name {
