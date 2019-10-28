@@ -35,12 +35,19 @@ class Focus extends React.Component {
         // only fetch data if a new event is selected - rather than fetch data that is already there
         if (id !== prevProps.match.params.id) {
             this.fetchInformation(id, data => {
-                const dateRaw = data.date.split('-');
-                const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
-                this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID }, () => {
-                    this.fetchMessages(id, messages => {
-                        this.setState({ messages: messages });
-                    })
+                // const dateRaw = data.date.split('-');
+                // const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                this.setState({ 
+                    eventName: data.name, 
+                    description: data.description, 
+                    numRSVP: data.upVotes, 
+                    location: data.location, 
+                    // date: date, // USING RAW DATE TO FORMAT WITH MOMENT ON DISPLAY
+                    date: data.date, 
+                    creatorID: data.creatorID }, () => {
+                        this.fetchMessages(id, messages => {
+                            this.setState({ messages: messages });
+                        })
                 });
             })
         }
@@ -51,12 +58,19 @@ class Focus extends React.Component {
         const { id } = this.props.match.params;
         console.log()
         this.fetchInformation(id, (data)=> {
-            const dateRaw = data.date.split('-');
-            const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
-            this.setState({ eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID }, () => {
-                this.fetchMessages(id, (messages) => {
-                    this.setState({ messages: messages });
-                })
+            // const dateRaw = data.date.split('-');
+            // const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+            this.setState({ 
+                eventName: data.name, 
+                description: data.description, 
+                numRSVP: data.upVotes, 
+                location: data.location, 
+                // date: date, // USING RAW DATE TO FORMAT WITH MOMENT ON DISPLAY
+                date: data.date, 
+                creatorID: data.creatorID }, () => {
+                    this.fetchMessages(id, (messages) => {
+                        this.setState({ messages: messages });
+                    })
             });
         })
     }
@@ -133,18 +147,18 @@ class Focus extends React.Component {
         if (this.state.messages) {
             return (
                 this.state.messages.map(item => {
-                    let dateTime = item.createdAt;
-                    dateTime = dateTime.split('T');
-                    const dateDash = dateTime[0];
-                    const dateList = dateDash.split('-');
-                    const date = `${dateList[1]}/${dateList[2]}/${dateList[0]}`
-                    const timeList = dateTime[1].split(':');
-                    const time = `${timeList[0]}:${timeList[1]}`;
+                    // let dateTime = item.createdAt; 
+                    // dateTime = dateTime.split('T');
+                    // const dateDash = dateTime[0];
+                    // const dateList = dateDash.split('-');
+                    // const date = `${dateList[1]}/${dateList[2]}/${dateList[0]}`
+                    // const timeList = dateTime[1].split(':');
+                    // const time = `${timeList[0]}:${timeList[1]}`;
                     return (
                         <li>
-                            <span className="msg-date"><Moment parse="MM/DD/YYYY" format="MMMM D, YYYY">{date}</Moment></span>
+                            <span className="msg-date"><Moment format="MMMM D, YYYY">{item.createdAt}</Moment></span>
                             {/* <span className="msg-date">{date}</span> */}
-                            <span className="msg-time"><Moment parse="HH:mm" format="h:MM A" tz="America/New_York">{time}</Moment></span>
+                            <span className="msg-time"><Moment format="h:MM A" tz="America/New_York">{item.createdAt}</Moment></span>
                             {/* <span className="msg-time">{time}</span> */}
                             <span className="msg-user">{item.creatorID}</span>
                             {item.content}
@@ -177,9 +191,17 @@ class Focus extends React.Component {
             }
         }).then(data => {
             if (data) {
-                const dateRaw = data.date.split('-');
-                const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
-                this.setState({eventName: data.name, description: data.description, numRSVP: data.upVotes, location: data.location, date: date, creatorID: data.creatorID});
+                // const dateRaw = data.date.split('-');
+                // const date = `${dateRaw[1]}/${dateRaw[2]}/${dateRaw[0]}`;
+                this.setState({
+                    eventName: data.name, 
+                    description: data.description, 
+                    numRSVP: data.upVotes, 
+                    location: data.location, 
+                    // date: date, // USING RAW DATE TO FORMAT WITH MOMENT ON DISPLAY
+                    date: data.date, 
+                    creatorID: data.creatorID
+                });
             }
         })
     }
@@ -257,7 +279,11 @@ class Focus extends React.Component {
                             <p className="event"> on <span className="event-date"><Moment parse="YYYY-MM-DD" format="MMMM D, YYYY">{this.state.date}</Moment></span></p>
                             <p className="event">hosted by <span className="event-creator">{this.state.creatorID}</span></p>
                             {/*this check should be a backend route, but for now keep it as front-end check*/}
-                            {this.props.currentUser === this.state.creatorID ? <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> : <button type="button" id="side-btn" className="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>}
+                            {this.props.currentUser === this.state.creatorID ? 
+                                <button type="button" id="side-btn" className="edit-btn" onClick={event => this.editClick(event)}>edit this event</button> 
+                                : 
+                                <button type="button" id="side-btn" className="rsvp-btn" onClick={(event) => this.makeRSVP(event)}>rsvp to this event</button>
+                            }
                         </>
                     }
 
