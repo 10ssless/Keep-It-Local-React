@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Router, Switch } from "react-router-dom";
+import { Redirect, Route, Router, Switch } from "react-router-dom";
 import AuthenticationAlert from "../src/components/Alert/Alert.js";
 import './App.css';
 import Footer from './components/Footer/Footer';
@@ -154,11 +154,13 @@ class App extends React.Component {
             )
           }}
           />
+          <Redirect to="/events"/>
         </div >
       );
     }
     else {
       return (
+        <>
         <Route exact path="/" render={(props) => {
           return (
             <Home
@@ -169,6 +171,8 @@ class App extends React.Component {
           )
         }}
         />
+        <Redirect to="/"/>
+        </>
       );
     }
   }
