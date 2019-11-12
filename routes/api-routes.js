@@ -553,8 +553,12 @@ function distanceBetween(coords1, coords2) {
 
 // takes two string respresentations of dates in format "YYYY-MM-DD"
 function compareDashedDates(date1, date2) {
+  console.log(date1);
+  console.log(date2);
   date1 = date1.split('-');
   date2 = date2.split('-');
+  console.log(date1);
+  console.log(date2);
   for (let i = 0; i < date1.length; i++) {
     if (parseInt(date1[i]) < parseInt(date2[i])) {
       return true;
@@ -562,6 +566,7 @@ function compareDashedDates(date1, date2) {
       return false;
     }
   }
+  return true;
 }
 
 

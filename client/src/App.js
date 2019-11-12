@@ -1,12 +1,12 @@
 import React from "react";
-import { Router, Route, Redirect, Switch } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import Events from "./pages/Events/Events";
-import Create from "./pages/Create/Create";
+import { Redirect, Route, Router, Switch } from "react-router-dom";
+import AuthenticationAlert from "../src/components/Alert/Alert.js";
 import './App.css';
-import history from './history';
 import Footer from './components/Footer/Footer';
-import AuthenticationAlert from "../src/components/Alert/Alert.js"
+import history from './history';
+import Create from "./pages/Create/Create";
+import Events from "./pages/Events/Events";
+import Home from "./pages/Home/Home";
 
 class App extends React.Component {
 
@@ -104,7 +104,7 @@ class App extends React.Component {
       }
     }).then(data => {
       if (data) {
-        this.setUser(data.userName);
+        this.setState({username: data.userName, loggedIn: true});
       }
     })
   }
@@ -154,11 +154,13 @@ class App extends React.Component {
             )
           }}
           />
+          <Redirect to="/events"/>
         </div >
       );
     }
     else {
       return (
+        <>
         <Route exact path="/" render={(props) => {
           return (
             <Home
@@ -169,6 +171,8 @@ class App extends React.Component {
           )
         }}
         />
+        <Redirect to="/"/>
+        </>
       );
     }
   }
