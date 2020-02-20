@@ -29,7 +29,7 @@ class Home extends React.Component {
                     "location": `${loc.latitude}, ${loc.longitude}`,
                     "referral": this.state.referralCode
                 }
-                fetch(`/api/signup`, {
+                fetch(`/user/signup`, {
                     method: 'POST', // or 'PUT'
                     body: JSON.stringify(data), // data can be `string` or {object}!
                     headers: {
@@ -59,7 +59,7 @@ class Home extends React.Component {
         this.setState({ loading: true })
         this.props.getLocation((loc) => {
             if (loc) {
-                const url = "/api/login";
+                const url = "/user/login";
                 const data = {
                     "username": this.state.username,
                     "password": this.state.password,

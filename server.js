@@ -1,7 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require('body-parser');
-const routes = require("./routes/api-routes.js");
+const routes = require("./routes");
 const passport = require("./config/passport");
 const path = require('path');
 

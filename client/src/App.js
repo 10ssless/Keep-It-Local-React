@@ -90,7 +90,7 @@ class App extends React.Component {
 
   // get active user on initial loading
   componentDidMount() {
-    fetch('/currentUser', {
+    fetch('/user/currentUser', {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
@@ -178,7 +178,7 @@ class App extends React.Component {
   }
 
   logout = () => {
-    fetch(`/api/logout`, {
+    fetch(`/user/logout`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'

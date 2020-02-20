@@ -83,7 +83,7 @@ class Focus extends React.Component {
         }
 
     fetchInformation = (id, cb) => {
-        fetch(`/api/event/${id}`, {
+        fetch(`/api/events/${id}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -126,7 +126,7 @@ class Focus extends React.Component {
     }
 
     fetchUpdateEvent = (id, cb) => {
-        fetch(`/api/event/${id}`, {
+        fetch(`/api/events/${id}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -179,7 +179,7 @@ class Focus extends React.Component {
     makeRSVP = (event) => {
         event.preventDefault();
         const { id } = this.props.match.params;
-        fetch(`/api/rsvp`, {
+        fetch(`/api/events/rsvp`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -237,7 +237,7 @@ class Focus extends React.Component {
     submitMessage = () => {
         const { id } = this.props.match.params;
         console.log(`this.submitMessage id=${id}`);
-        fetch(`/api/message`, {
+        fetch(`/api/messages/all`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

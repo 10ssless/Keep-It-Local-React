@@ -18,7 +18,7 @@ class Create extends React.Component{
 
     createEvent = (event) => {
         event.preventDefault();
-        fetch(`/api/event`, {
+        fetch(`/api/events/newEvent`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

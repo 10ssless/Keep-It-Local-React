@@ -36,7 +36,7 @@ class Events extends React.Component {
 
     // helper function to fetch events from database
     getEvents = (cb) => {
-        const url = '/api/events';
+        const url = '/api/events/allUserandArea';
         this.setState({ fetching: true }); //can be used to display some loading animation or something because the loading process can take a little while
         try {
             fetch(url, {
